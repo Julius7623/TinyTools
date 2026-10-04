@@ -51,7 +51,7 @@ function mount(){
  const mb=$('#mb');if(!mb)return;
  const sc=D.createElement('div'),dr=D.createElement('nav');
  sc.className='scrim';sc.style.display='none';dr.className='drawer';dr.id='dr';dr.setAttribute('aria-label','Tools');dr.setAttribute('role','dialog');dr.setAttribute('aria-modal','true');dr.inert=true;
- dr.innerHTML='<div class="dh"><b>MyTinyTools</b><button class="x" aria-label="Close menu"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
+ dr.innerHTML='<div class="dh"><b class="logo" role="img" aria-label="MyTinyTools"><span class="wm" aria-hidden="true">MyTinyT<span class="oo">oo<svg viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M6 3 Q50 24 94 3"/></svg></span>ls</span></b><button class="x" aria-label="Close menu"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
   +item({n:'Home',p:'/',i:'home',home:1},'/'===here,1)+'<p class="dl">Tools</p>'+TOOLS.map(t=>item(t,t.p===here)).join('')+'<hr class="dsep">'+item({n:'How to use',p:'/how',i:'help',home:1},'/how'===here,1)+'<p class="dc">Made by <b translate="no">Joel G. Thompson</b> &middot; <a class="lk" href="/legal">Privacy &amp; Terms</a></p>';
  D.body.append(sc,dr);
  const mq=matchMedia('(min-width:1280px)'),side=()=>{if(mq.matches)D.body.classList.remove('menu');dr.inert=mq.matches?false:!D.body.classList.contains('menu')};mq.addEventListener('change',side);side();
