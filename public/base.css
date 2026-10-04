@@ -33,7 +33,7 @@ button:active{transform:scale(.97)}
 .sw:active{transform:none}
 .sw.on{background:#636366}
 .sw.on{--x:20px}
-.kn>*{grid-area:1/1;transition:opacity .25s var(--e),transform .35s var(--sp)}
+.kn>*{grid-area:1/1;transition:opacity .3s var(--e),transform .42s var(--sp)}
 .kn b{font-size:13px;font-weight:700}
 .kn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .k1,.sun{opacity:0;transform:scale(.6)}
@@ -56,7 +56,7 @@ button:active{transform:scale(.97)}
 .clr svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
 .clr:disabled{opacity:.35;pointer-events:none}
 .clr.hide{max-width:0;margin-left:-8px;opacity:0;transform:scale(.5);pointer-events:none}
-.sw{transition:transform .4s var(--sp),background-color .4s cubic-bezier(.4,0,.2,1)}
+.sw{transition:transform .4s var(--sp),background-color .5s cubic-bezier(.4,0,.2,1)}
 :root{--bg:#f5f5f5;--t:#111111;--t2:#6e6e73;--g:rgba(255,255,255,.7);--gb:rgba(0,0,0,.08);--hl:rgba(255,255,255,.9);--shc:rgba(0,0,0,.08);--ac:#111111;--ac2:#111111;--act:#f5f5f5;--sh:0 8px 28px var(--shc);--e:cubic-bezier(.4,0,.2,1);--sp:cubic-bezier(.34,1.56,.64,1);--tc:opacity .25s;--mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace}
 [data-theme=dark]{--bg:#0a0a0a;--t:#f2f2f2;--t2:#8e8e93;--g:rgba(255,255,255,.05);--gb:rgba(255,255,255,.1);--hl:rgba(255,255,255,.08);--shc:rgba(0,0,0,.5);--ac:#f2f2f2;--ac2:#f2f2f2;--act:#0a0a0a}
 @property --bg{syntax:"<color>";inherits:true;initial-value:#f5f5f5}
@@ -141,14 +141,14 @@ html.ready{transition:--bg .55s cubic-bezier(.4,0,.2,1),--t .55s cubic-bezier(.4
 .drawer{background:color-mix(in srgb,var(--bg) 66%,transparent);-webkit-backdrop-filter:blur(34px) saturate(180%);backdrop-filter:blur(34px) saturate(180%)}
 /* switch: knob putih -> lensa kaca saat ditekan */
 .sw{box-shadow:inset 0 1px 3px rgba(0,0,0,.18),inset 0 0 0 .5px rgba(0,0,0,.06)}
-.kn{position:absolute;top:4px;left:4px;width:36px;height:28px;border-radius:99px;display:grid;place-items:center;color:#1c1c1e;translate:var(--x,0px) 0;scale:1;transition:translate .85s var(--spring),scale .5s var(--spring),color .3s;will-change:translate,scale}
+.kn{position:absolute;top:4px;left:4px;width:36px;height:28px;border-radius:99px;display:grid;place-items:center;color:#1c1c1e;translate:var(--x,0px) 0;scale:1;transition:translate 1.02s var(--spring),scale .6s var(--spring),color .36s;will-change:translate,scale}
 .kn>*{position:relative;z-index:1}
 .kn::before,.kn::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;transition:opacity .24s cubic-bezier(.4,0,.2,1)}
 .kn::before{background:linear-gradient(180deg,#fff,#f1f1f4);box-shadow:0 2px 6px rgba(0,0,0,.26),0 0 0 .5px rgba(0,0,0,.08),inset 0 1px 0 #fff,inset 0 -3px 5px rgba(0,0,0,.07)}
 .kn::after{opacity:0;background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.05) 38%,rgba(255,255,255,.03) 62%,rgba(255,255,255,.26));-webkit-backdrop-filter:blur(.8px) saturate(2) brightness(1.1);backdrop-filter:blur(.8px) saturate(2) brightness(1.1);box-shadow:0 9px 20px rgba(0,0,0,.28),0 1px 3px rgba(0,0,0,.25),inset 0 0 0 1px rgba(255,255,255,.38),inset 0 0 0 1.5px rgba(0,0,0,.09),inset 0 3px 3px -1px rgba(255,255,255,.85),inset 0 -3px 4px -1px rgba(255,255,255,.4),inset 3px 0 4px -3px rgba(255,255,255,.5),inset -3px 0 4px -3px rgba(255,255,255,.5)}
 .sw.press .kn{scale:1.16 1.12;color:var(--t)}
 .sw.press .kn::before{opacity:0}.sw.press .kn::after{opacity:1}
-.sw.drag .kn{transition:scale .5s var(--spring),color .3s}
+.sw.drag .kn{transition:scale .6s var(--spring),color .36s}
 .mb:active{scale:.94}
 
 /* ===== Apple HIG pass: radius, spacing (4/8pt), type scale, 44pt targets ===== */
@@ -221,17 +221,16 @@ body.menu .drawer{transform:none}
 /* ===== Liquid Glass v2 (meniru iOS 26) =====
    Diam: knob putih solid. Ditekan: berubah jadi lensa kaca besar yang melewati tepi track,
    ada pita gelap/terang di tepi atas-bawah (refraksi latar), garis tepi tipis, dan bayangan jatuh. */
-.sw{overflow:visible;--band:rgba(255,255,255,.8);--rimo:rgba(0,0,0,.22);--rimi:rgba(255,255,255,.55);--rimt:rgba(255,255,255,.9);--lsh:rgba(40,40,70,.28);--sw-on:#636366}
-[data-theme=dark] .sw{--band:rgba(12,12,14,.72);--rimo:rgba(0,0,0,.6);--rimi:rgba(255,255,255,.2);--rimt:rgba(255,255,255,.55);--lsh:rgba(0,0,0,.6)}
+.sw{overflow:visible;--band:rgba(110,110,135,.17);--rimo:rgba(0,0,0,.12);--rimi:rgba(255,255,255,.6);--rimt:rgba(255,255,255,.95);--lsh:rgba(30,30,60,.17);--sw-on:#636366}
+[data-theme=dark] .sw{--band:rgba(10,10,12,.5);--rimo:rgba(0,0,0,.55);--rimi:rgba(255,255,255,.2);--rimt:rgba(255,255,255,.5);--lsh:rgba(0,0,0,.5)}
 .sw.on,html[data-theme=dark] .sw{background:var(--sw-on)}
-.kn::before,.kn::after{transition:opacity .3s cubic-bezier(.4,0,.2,1)}
+.kn::before,.kn::after{transition:opacity .36s cubic-bezier(.4,0,.2,1)}
 .kn::before{background:linear-gradient(180deg,#fff,#f4f4f6);box-shadow:0 1px 2px rgba(0,0,0,.16),0 3px 8px rgba(0,0,0,.2),0 0 0 .5px rgba(0,0,0,.06)}
 .kn::after{
   background:
-    radial-gradient(ellipse 62% 21% at 50% 13%,var(--band) 0 72%,transparent 100%),
-    radial-gradient(ellipse 62% 21% at 50% 87%,var(--band) 0 72%,transparent 100%),
-    linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.03) 48%,rgba(255,255,255,.12));
+    linear-gradient(180deg,var(--band) 0,transparent 27%,transparent 73%,var(--band) 100%),
+    linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.02) 50%,rgba(255,255,255,.1));
   -webkit-backdrop-filter:blur(1.4px) saturate(2.2) brightness(1.22);backdrop-filter:blur(1.4px) saturate(2.2) brightness(1.22);
-  box-shadow:0 0 0 .6px var(--rimo),0 14px 26px var(--lsh),0 3px 6px var(--lsh),
-    inset 0 0 0 1px var(--rimi),inset 0 1.5px 1px var(--rimt),inset 0 -1.5px 1px var(--rimi)}
-.sw.press .kn{scale:1.52 1.46;color:var(--t)}
+  box-shadow:0 0 0 .6px var(--rimo),0 9px 18px var(--lsh),0 2px 4px var(--lsh),
+    inset 0 0 0 1px var(--rimi),inset 0 1.5px 1px var(--rimt),inset 0 -1.5px 1px var(--rimi),inset 0 0 9px -2px rgba(255,255,255,.3)}
+.sw.press .kn{scale:1.46 1.4;color:var(--t)}

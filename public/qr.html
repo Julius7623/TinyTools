@@ -18,13 +18,13 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
 </script>
 <link rel="stylesheet" href="/base.css?v=9">
 <link rel="stylesheet" href="/ui.css?v=26">
-<script src="/shell.js?v=36" defer></script>
+<script src="/shell.js?v=37" defer></script>
 <style>
 /* Slider segmented control (same feel as the dark mode switch) */
 .seg{--n:3;position:relative;display:flex;padding:4px;border-radius:999px;background:rgba(127,127,127,.16);margin-bottom:16px;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:pointer;box-shadow:inset 0 1px 3px rgba(0,0,0,.14)}
-.seg .thumb{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/var(--n));border-radius:999px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.22),0 0 0 .5px rgba(0,0,0,.08);translate:var(--x,calc(var(--i,0)*100%)) 0;scale:1;transition:translate .75s var(--spring),scale .45s var(--spring),box-shadow .3s;pointer-events:none;will-change:translate,scale}
+.seg .thumb{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/var(--n));border-radius:999px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.22),0 0 0 .5px rgba(0,0,0,.08);translate:var(--x,calc(var(--i,0)*100%)) 0;scale:1;transition:translate .9s var(--spring),scale .55s var(--spring),box-shadow .36s;pointer-events:none;will-change:translate,scale}
 .seg.press .thumb{scale:1.05 1.14;box-shadow:0 8px 18px rgba(0,0,0,.26),0 0 0 .5px rgba(0,0,0,.08)}
-.seg.drag .thumb{transition:scale .45s var(--spring),box-shadow .3s}
+.seg.drag .thumb{transition:scale .55s var(--spring),box-shadow .36s}
 [data-theme=dark] .seg .thumb{background:rgba(255,255,255,.2);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 2px 8px rgba(0,0,0,.4)}
 [data-theme=dark] .seg.press .thumb{box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 8px 18px rgba(0,0,0,.5)}
 .seg button{position:relative;z-index:1;flex:1 1 0;min-width:0;min-height:36px;padding:0 8px;border:0;border-radius:999px;background:transparent;font:inherit;font-size:15px;font-weight:600;color:var(--t2);white-space:nowrap;cursor:pointer;transition:color .3s;-webkit-tap-highlight-color:transparent}
@@ -33,16 +33,16 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
 /* Lensa kaca: label di dalam kaca dibelokkan di tepinya (refraksi), ada kilau tepi. Kaca di atas label asli; latar lensa menutup label asli di bawahnya */
 .seg.has-lens .thumb{z-index:2;background:none;-webkit-backdrop-filter:none;backdrop-filter:none}
 .lensclip{position:absolute;inset:0;border-radius:inherit;overflow:hidden;clip-path:inset(0 round 999px)}
-.lens{position:absolute;top:0;bottom:0;left:0;width:calc(var(--n)*100%);display:flex;color:var(--t);background:linear-gradient(180deg,#fff,#efeff3);translate:calc(-1*var(--x,calc(var(--i,0)*100%/var(--n))));transition:translate .75s var(--spring)}
+.lens{position:absolute;top:0;bottom:0;left:0;width:calc(var(--n)*100%);display:flex;color:var(--t);background:linear-gradient(180deg,#fff,#efeff3);translate:calc(-1*var(--x,calc(var(--i,0)*100%/var(--n))));transition:translate .9s var(--spring)}
 .lens span{flex:1 1 0;display:grid;place-items:center;font-size:15px;font-weight:600;white-space:nowrap}
 .seg.sm .lens span{font-size:13px}
-.seg[data-edge]:not(.drag) .lens{transition:translate .7s cubic-bezier(.22,.9,.3,1)}
+.seg[data-edge]:not(.drag) .lens{transition:translate .85s cubic-bezier(.22,.9,.3,1)}
 .seg.drag .lens{transition:none}
 .seg.press .lens{opacity:.88}
 .seg.has-lens .thumb::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 3px 5px rgba(255,255,255,.7),inset 0 -4px 7px rgba(0,0,0,.09),inset 0 0 12px rgba(255,255,255,.35)}
 [data-theme=dark] .lens{background:linear-gradient(180deg,#68686d,#4b4b50)}
 [data-theme=dark] .seg.has-lens .thumb::after{box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),inset 0 3px 5px rgba(255,255,255,.28),inset 0 -4px 7px rgba(0,0,0,.25),inset 0 0 12px rgba(255,255,255,.12)}
-.seg[data-edge]:not(.drag) .thumb{transition:translate .7s cubic-bezier(.22,.9,.3,1),scale .45s var(--spring),box-shadow .3s}
+.seg[data-edge]:not(.drag) .thumb{transition:translate .85s cubic-bezier(.22,.9,.3,1),scale .55s var(--spring),box-shadow .36s}
 /* Kaca cair: tipis, ada kilau tepi atas, makin bening dan membesar saat disentuh; meregang mengikuti kecepatan geser */
 .seg .thumb{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(255,255,255,.8));-webkit-backdrop-filter:blur(10px) saturate(1.8);backdrop-filter:blur(10px) saturate(1.8);box-shadow:0 2px 6px rgba(0,0,0,.2),inset 0 1px 0 #fff,inset 0 -1px 1px rgba(0,0,0,.07),0 0 0 .5px rgba(0,0,0,.08)}
 .seg.press .thumb{background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.4));-webkit-backdrop-filter:blur(3px) saturate(2.1) brightness(1.08);backdrop-filter:blur(3px) saturate(2.1) brightness(1.08);scale:calc(1.03*var(--sx,1)) calc(1.14/var(--sx,1))}
@@ -53,8 +53,8 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
 /* ===== Liquid Glass v2 (meniru slider iOS 26) =====
    Diam: kapsul putih solid. Ditekan: jadi lensa kaca yang membesar melewati tepi track, label di dalamnya ikut membesar,
    ada pita refraksi di tepi atas-bawah, garis tepi tipis, dan bayangan jatuh. */
-.seg{--band:rgba(130,130,150,.3);--rimo:rgba(0,0,0,.22);--rimi:rgba(255,255,255,.6);--rimt:rgba(255,255,255,.95);--lsh:rgba(40,40,70,.26)}
-[data-theme=dark] .seg{--band:rgba(12,12,14,.72);--rimo:rgba(0,0,0,.6);--rimi:rgba(255,255,255,.2);--rimt:rgba(255,255,255,.5);--lsh:rgba(0,0,0,.6)}
+.seg{--band:rgba(110,110,135,.15);--rimo:rgba(0,0,0,.12);--rimi:rgba(255,255,255,.6);--rimt:rgba(255,255,255,.95);--lsh:rgba(30,30,60,.16)}
+[data-theme=dark] .seg{--band:rgba(10,10,12,.5);--rimo:rgba(0,0,0,.55);--rimi:rgba(255,255,255,.2);--rimt:rgba(255,255,255,.5);--lsh:rgba(0,0,0,.5)}
 /* diam: putih solid di light maupun dark, teks gelap */
 .seg.has-lens .lens{background:#fff;color:#1c1c1e}
 [data-theme=dark] .seg.has-lens .lens{background:#fff}
@@ -63,15 +63,15 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
 .seg.has-lens .thumb::after{box-shadow:inset 0 1px 0 #fff,inset 0 -2px 3px rgba(0,0,0,.06)}
 [data-theme=dark] .seg.has-lens .thumb::after{box-shadow:inset 0 1px 0 #fff,inset 0 -2px 3px rgba(0,0,0,.06)}
 .seg.has-lens .thumb::before{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s cubic-bezier(.4,0,.2,1);
-  background:radial-gradient(ellipse 64% 19% at 50% 12%,var(--band) 0 72%,transparent 100%),radial-gradient(ellipse 64% 19% at 50% 88%,var(--band) 0 72%,transparent 100%)}
-.seg.has-lens .lens{transition:translate .75s var(--spring),background-color .3s,color .3s}
-.seg.has-lens[data-edge]:not(.drag) .lens{transition:translate .7s cubic-bezier(.22,.9,.3,1),background-color .3s,color .3s}
-.seg.has-lens.drag .lens{transition:background-color .3s,color .3s}
+  background:linear-gradient(180deg,var(--band) 0,transparent 26%,transparent 74%,var(--band) 100%)}
+.seg.has-lens .lens{transition:translate .9s var(--spring),background-color .36s,color .36s}
+.seg.has-lens[data-edge]:not(.drag) .lens{transition:translate .85s cubic-bezier(.22,.9,.3,1),background-color .36s,color .36s}
+.seg.has-lens.drag .lens{transition:background-color .36s,color .36s}
 /* ditekan: lensa kaca */
-.seg.press.has-lens .thumb{scale:calc(1.2*var(--sx,1)) calc(1.3/var(--sx,1));-webkit-backdrop-filter:blur(6px) saturate(1.9) brightness(1.04);backdrop-filter:blur(6px) saturate(1.9) brightness(1.04);
-  box-shadow:0 0 0 .6px var(--rimo),0 14px 28px var(--lsh),0 3px 6px var(--lsh)}
+.seg.press.has-lens .thumb{scale:calc(1.15*var(--sx,1)) calc(1.22/var(--sx,1));-webkit-backdrop-filter:blur(6px) saturate(1.9) brightness(1.04);backdrop-filter:blur(6px) saturate(1.9) brightness(1.04);
+  box-shadow:0 0 0 .6px var(--rimo),0 9px 18px var(--lsh),0 2px 4px var(--lsh)}
 .seg.press.has-lens .thumb::before{opacity:1}
-.seg.press.has-lens .thumb::after{box-shadow:inset 0 0 0 1px var(--rimi),inset 0 1.5px 1px var(--rimt),inset 0 -1.5px 1px var(--rimi)}
+.seg.press.has-lens .thumb::after{box-shadow:inset 0 0 0 1px var(--rimi),inset 0 1.5px 1px var(--rimt),inset 0 -1.5px 1px var(--rimi),inset 0 0 9px -2px rgba(255,255,255,.3)}
 .seg.press.has-lens .lens{opacity:1;background:rgba(255,255,255,.3);color:var(--t)}
 /* label di dalam lensa membesar ~10% saja (bukan seluruh 20%), supaya tidak terlihat kasar */
 .seg.has-lens .lens span{transition:font-size .3s}
