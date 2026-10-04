@@ -34,9 +34,9 @@ summary::-webkit-details-marker{display:none}
 summary::after{content:"";flex:none;width:8px;height:8px;border-right:2px solid var(--t2);border-bottom:2px solid var(--t2);rotate:45deg;translate:0 -2px;transition:rotate .3s var(--spring),translate .3s var(--spring)}
 details[open] summary::after{rotate:225deg;translate:0 2px}
 details p{color:var(--t2);font-size:15px;line-height:1.45;padding-bottom:14px}
-.cta{display:flex;gap:8px;margin-top:12px}.cta a{flex:1;display:grid;place-items:center;text-decoration:none;max-width:none}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.cta a{flex:1 1 auto;font-size:15px;padding:0 18px;overflow:visible;display:grid;place-items:center;text-decoration:none;max-width:none;color:var(--t);white-space:nowrap}
 </style>
-<link rel="stylesheet" href="/glass.css?v=1">
+<link rel="stylesheet" href="/glass.css?v=3">
 </head>
 <body>
 <header>
@@ -90,7 +90,7 @@ details p{color:var(--t2);font-size:15px;line-height:1.45;padding-bottom:14px}
     </div>
   </section>
 
-  <div class="cta"><a class="btn" href="/grab">Video Downloader</a><a class="ghost" href="/qr">QR Maker</a><a class="ghost" href="/pdf2word">PDF to Word</a></div>
+  <div class="cta"><a class="ghost" href="/grab">Video Downloader</a><a class="ghost" href="/qr">QR Maker</a><a class="ghost" href="/pdf2word">PDF to Word</a></div>
   <p class="foot"><a class="lk" href="/legal">Privacy &amp; Terms</a></p>
 </main>
 </body>

@@ -1,186 +1,136 @@
-/* ===== Liquid Glass (gaya iOS 26) =====
-   Dimuat TERAKHIR di semua halaman. Menimpa "clean layer" di ui.css:
-   semua permukaan jadi kaca tembus pandang (blur + saturasi + kilau tepi),
-   di atas latar berwarna supaya kacanya benar-benar "terlihat".
-   Hapus <link> glass.css untuk kembali ke tampilan datar. */
+/* ===== Liquid Glass (gaya iOS 26), latar polos =====
+   Dimuat TERAKHIR di semua halaman. Latar satu warna (putih / hitam lembut).
+   Kartu di dalam halaman = kaca tipis TANPA backdrop-filter (di latar polos blur tidak terlihat,
+   dan backdrop-filter bertingkat membuat sudut kartu jadi kotak hitam di Safari).
+   backdrop-filter hanya dipakai untuk lapisan yang melayang di atas konten. */
 
-/* ---------- Token ---------- */
 :root{
-  --bg:#eef1f8;
-  --t2:#565660;
-  --card:rgba(255,255,255,.44);
-  --g:rgba(255,255,255,.44);
-  --gb:rgba(255,255,255,.6);
-  --fill:rgba(120,120,135,.16);
-  --btn:rgba(255,255,255,.5);
-  --inp:rgba(255,255,255,.42);
-  --hl:rgba(255,255,255,.95);
-  --shc:rgba(30,40,100,.16);
-  --rim1:rgba(255,255,255,.98);
-  --rim2:rgba(255,255,255,.35);
-  --sheen:linear-gradient(155deg,rgba(255,255,255,.62),rgba(255,255,255,.1) 42%,rgba(255,255,255,0) 68%,rgba(255,255,255,.2));
-  --blur:blur(28px) saturate(185%);
-  --blur-s:blur(16px) saturate(170%);
+  --bg:#f2f2f7;
+  --t2:#5f5f69;
+  --card:rgba(255,255,255,.72);
+  --g:rgba(255,255,255,.72);
+  --gb:rgba(0,0,0,.07);
+  --fill:rgba(120,120,135,.14);
+  --btn:rgba(255,255,255,.8);
+  --inp:rgba(120,120,135,.1);
+  --hl:rgba(255,255,255,1);
+  --shc:rgba(20,20,60,.11);
+  --rim1:rgba(255,255,255,1);
+  --rim2:rgba(0,0,0,.06);
+  --sheen:linear-gradient(160deg,rgba(255,255,255,.9),rgba(255,255,255,.35) 55%,rgba(255,255,255,.6));
+  --blur:blur(30px) saturate(180%);
 }
 [data-theme=dark]{
-  --bg:#05060a;
-  --t2:#9a9aa6;
-  --card:rgba(255,255,255,.075);
-  --g:rgba(255,255,255,.075);
-  --gb:rgba(255,255,255,.14);
+  --bg:#000;
+  --t2:#98989f;
+  --card:rgba(255,255,255,.08);
+  --g:rgba(255,255,255,.08);
+  --gb:rgba(255,255,255,.12);
   --fill:rgba(120,120,135,.28);
   --btn:rgba(255,255,255,.12);
-  --inp:rgba(0,0,0,.28);
-  --hl:rgba(255,255,255,.2);
-  --shc:rgba(0,0,0,.55);
-  --rim1:rgba(255,255,255,.42);
-  --rim2:rgba(255,255,255,.07);
-  --sheen:linear-gradient(155deg,rgba(255,255,255,.16),rgba(255,255,255,.03) 42%,rgba(255,255,255,0) 68%,rgba(255,255,255,.06));
+  --inp:rgba(255,255,255,.07);
+  --hl:rgba(255,255,255,.16);
+  --shc:rgba(0,0,0,.6);
+  --rim1:rgba(255,255,255,.4);
+  --rim2:rgba(255,255,255,.06);
+  --sheen:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.04) 55%,rgba(255,255,255,.08));
 }
+html,body{background:var(--bg)}
+body::before,body::after{content:none}
 
-/* ---------- Latar: "wallpaper" berwarna yang dibiaskan kaca ---------- */
-body{background:transparent}
-body::before,body::after{content:"";position:fixed;inset:-15%;z-index:-1;pointer-events:none;transition:opacity .55s cubic-bezier(.4,0,.2,1);will-change:transform,opacity;animation:drift 38s ease-in-out infinite alternate}
-body::before{
-  background:
-    radial-gradient(38% 32% at 14% 10%,rgba(10,132,255,.42),transparent 72%),
-    radial-gradient(34% 30% at 90% 16%,rgba(191,90,242,.34),transparent 72%),
-    radial-gradient(40% 34% at 82% 90%,rgba(255,159,10,.30),transparent 72%),
-    radial-gradient(36% 32% at 8% 86%,rgba(48,209,88,.28),transparent 72%),
-    radial-gradient(30% 26% at 50% 50%,rgba(94,92,230,.14),transparent 72%);
-  opacity:1}
-body::after{
-  background:
-    radial-gradient(38% 32% at 14% 10%,rgba(10,132,255,.5),transparent 72%),
-    radial-gradient(34% 30% at 90% 16%,rgba(191,90,242,.42),transparent 72%),
-    radial-gradient(40% 34% at 82% 90%,rgba(255,55,95,.34),transparent 72%),
-    radial-gradient(36% 32% at 8% 86%,rgba(48,209,88,.26),transparent 72%),
-    radial-gradient(30% 26% at 50% 50%,rgba(94,92,230,.2),transparent 72%);
-  opacity:0;animation-delay:-12s}
-html[data-theme=dark] body::before{opacity:0}
-html[data-theme=dark] body::after{opacity:1}
-@keyframes drift{from{transform:translate3d(-2%,-1.5%,0) scale(1)}to{transform:translate3d(2.5%,2%,0) scale(1.08)}}
-
-/* ---------- Permukaan kaca (kartu, panel, daftar, kotak) ---------- */
-main :is(.glass,.fmt,.rc,.card,.drop,.job,.opt,.uploadBox,.err,.pv,.sk,.how,.doc,.qrbox,.form),
-.dlg .box,.dlg.flat .box,.rdy,.sheet .pn,.drawer,#t{
+/* ---------- Kartu di halaman: kaca tipis, tanpa blur ---------- */
+main :is(.glass,.fmt,.rc,.card,.drop,.job,.opt,.uploadBox,.err,.pv,.sk,.how,.doc,.qrbox,.form){
   background:var(--sheen),var(--card);
-  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);
-  box-shadow:0 14px 36px var(--shc),0 1px 2px rgba(0,0,0,.05),inset 0 1.5px 0 var(--hl),inset 0 -1px 0 rgba(255,255,255,.18),inset 0 0 26px rgba(255,255,255,.1);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  border:0;
+  box-shadow:0 8px 24px var(--shc),0 0 0 .5px var(--gb),inset 0 1.5px 0 var(--hl),inset 0 -1px 0 rgba(255,255,255,.1);
+  position:relative;
 }
-main :is(.glass,.fmt,.rc,.card,.drop,.job,.opt,.uploadBox,.err,.pv,.sk,.how,.doc,.qrbox,.form){border-radius:28px}
+[data-theme=dark] main :is(.glass,.fmt,.rc,.card,.drop,.job,.opt,.uploadBox,.err,.pv,.sk,.how,.doc,.qrbox,.form){box-shadow:0 8px 24px var(--shc),inset 0 0 0 1px var(--gb),inset 0 1.5px 0 var(--hl)}
+main :is(.glass,.drop,.job,.err,.pv,.sk,.how,.doc,.qrbox,.form){border-radius:28px}
 main :is(.fmt,.rc,.card,.opt,.uploadBox){border-radius:24px}
-main :is(.glass,.fmt,.rc,.card,.opt,.how,.doc,.pv,.err,.qrbox,.form,.job,.uploadBox,.sk){position:relative}
-main .glass::before{display:block}   /* kilau permukaan dari clean layer dimatikan; kilau kini di background */
-main .glass::before{background:radial-gradient(90% 60% at 8% 0%,rgba(255,255,255,.32),transparent 60%);opacity:.9}
-[data-theme=dark] main .glass::before{background:radial-gradient(90% 60% at 8% 0%,rgba(255,255,255,.1),transparent 60%)}
+main .glass::before{display:none}
+/* Kartu di dalam kartu: lebih tipis supaya tidak terlihat bertumpuk */
+main :is(.qrbox,.form,.how,.doc) :is(.opt,.fmt,.rc){background:var(--fill);box-shadow:inset 0 1px 0 var(--hl)}
+main :is(.rc,.opt,.how,.doc,.uploadBox,.pv)::after{content:none}
+.qrbox .opt{box-shadow:none}
 
-/* Tepi kaca (rim light) untuk elemen yang belum punya */
-main :is(.rc,.opt,.how,.doc,.uploadBox,.pv){isolation:isolate}
-main :is(.rc,.opt,.how,.doc,.uploadBox,.pv)::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;background:linear-gradient(135deg,var(--rim1),transparent 38%,transparent 62%,var(--rim2));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-
-/* Kotak yang bernada gelap/terang tetap terbaca di atas latar berwarna */
-main .sh h2,main h1{text-shadow:0 1px 0 rgba(255,255,255,.35)}
-[data-theme=dark] main .sh h2,[data-theme=dark] main h1{text-shadow:none}
-
-/* HP: blur sedikit lebih ringan, tapi tetap kaca (bukan datar) */
-@media(max-width:520px),(hover:none){
-  main :is(.glass,.fmt,.rc,.card,.drop,.job,.opt,.uploadBox,.err,.pv,.sk,.how,.doc,.qrbox,.form){-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%)}
-}
-
-/* Hover (mouse) dan tekan (sentuh) */
-@media(hover:hover) and (pointer:fine){
-  a.card:hover,.fmt:hover{box-shadow:0 20px 44px var(--shc),0 1px 2px rgba(0,0,0,.05),inset 0 1.5px 0 var(--hl),inset 0 -1px 0 rgba(255,255,255,.18),inset 0 0 26px rgba(255,255,255,.14)}
-}
 a.card,.fmt,.rc,.di{transition:transform .4s var(--sp),scale .35s var(--spring),box-shadow .3s,opacity .3s,filter .3s}
 a.card:active,.fmt:active,.rc:active{scale:.975}
 .di:active{scale:.98}
+@media(hover:hover) and (pointer:fine){
+  a.card:hover,.fmt:hover{box-shadow:0 14px 32px var(--shc),0 0 0 .5px var(--gb),inset 0 1.5px 0 var(--hl)}
+}
 
 /* ---------- Tombol ---------- */
-/* Utama: kaca bernada (prominent glass) */
 .btn{
-  background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 76%,#fff),var(--ac));
-  box-shadow:0 8px 20px color-mix(in srgb,var(--ac) 32%,transparent),inset 0 1.5px 0 rgba(255,255,255,.34),inset 0 -1.5px 1px rgba(0,0,0,.18),inset 0 0 0 .5px rgba(255,255,255,.2);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 80%,#fff),var(--ac));
+  box-shadow:0 6px 16px color-mix(in srgb,var(--ac) 26%,transparent),inset 0 1.5px 0 rgba(255,255,255,.3),inset 0 -1.5px 1px rgba(0,0,0,.16);
 }
-[data-theme=dark] .btn{background:linear-gradient(180deg,#fff,color-mix(in srgb,var(--ac) 88%,#8e8e99));box-shadow:0 8px 22px rgba(255,255,255,.12),inset 0 1.5px 0 #fff,inset 0 -1.5px 1px rgba(0,0,0,.16)}
-/* Sekunder: kaca bening */
+[data-theme=dark] .btn{background:linear-gradient(180deg,#fff,#d6d6dc);box-shadow:0 6px 18px rgba(255,255,255,.1),inset 0 1.5px 0 #fff,inset 0 -1.5px 1px rgba(0,0,0,.14)}
 .ghost,.mb,.more,.cl,.bar .clr,.dlg .ghost,.pill{
-  background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,0)),var(--btn);
-  -webkit-backdrop-filter:var(--blur-s);backdrop-filter:var(--blur-s);
-  box-shadow:0 4px 14px var(--shc),inset 0 1.5px 0 var(--hl),inset 0 -1px 0 rgba(255,255,255,.14);
+  background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,0)),var(--btn);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  box-shadow:0 3px 10px var(--shc),0 0 0 .5px var(--gb),inset 0 1.5px 0 var(--hl);
 }
-[data-theme=dark] .ghost,[data-theme=dark] .mb,[data-theme=dark] .more,[data-theme=dark] .cl,[data-theme=dark] .bar .clr,[data-theme=dark] .dlg .ghost,[data-theme=dark] .pill{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0)),var(--btn)}
-.more.quiet{background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
-.ghost.hide,.pill.hide,.clr.hide{box-shadow:none}
+[data-theme=dark] .ghost,[data-theme=dark] .mb,[data-theme=dark] .more,[data-theme=dark] .cl,[data-theme=dark] .bar .clr,[data-theme=dark] .dlg .ghost,[data-theme=dark] .pill{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,0)),var(--btn);box-shadow:0 3px 10px var(--shc),inset 0 0 0 1px var(--gb),inset 0 1.5px 0 var(--hl)}
+.more.quiet,.ghost.hide,.pill.hide,.clr.hide{background:none;box-shadow:none}
+.ghost{color:var(--t)}
 @media(hover:hover) and (pointer:fine){
-  .ghost:hover,.mb:hover,.dh .x:hover,.rc:hover{box-shadow:0 4px 14px var(--shc),inset 0 1.5px 0 var(--hl),inset 0 0 0 999px rgba(255,255,255,.18)}
+  .ghost:hover,.mb:hover,.dh .x:hover,.rc:hover{box-shadow:0 3px 10px var(--shc),inset 0 1.5px 0 var(--hl),inset 0 0 0 999px rgba(127,127,127,.12)}
   .more.quiet:hover{box-shadow:none}
 }
 .dh .x,.px::before{background:var(--btn);box-shadow:inset 0 1px 0 var(--hl)}
 
 /* ---------- Kolom ketik ---------- */
-.fld input,.cc,.ps{
-  background:var(--inp);border:0;
-  -webkit-backdrop-filter:var(--blur-s);backdrop-filter:var(--blur-s);
-  box-shadow:inset 0 1.5px 3px rgba(0,0,0,.1),inset 0 0 0 1px var(--gb),0 1px 0 rgba(255,255,255,.4);
-}
-[data-theme=dark] .fld input,[data-theme=dark] .cc,[data-theme=dark] .ps{box-shadow:inset 0 1.5px 4px rgba(0,0,0,.45),inset 0 0 0 1px var(--gb)}
+.fld input,.cc,.ps{background:var(--inp);border:0;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 1.5px 3px rgba(0,0,0,.1),inset 0 0 0 1px var(--gb)}
+[data-theme=dark] .fld input,[data-theme=dark] .cc,[data-theme=dark] .ps{box-shadow:inset 0 1.5px 4px rgba(0,0,0,.5),inset 0 0 0 1px var(--gb)}
 .fld input:focus,.ps:focus{box-shadow:inset 0 1.5px 3px rgba(0,0,0,.1),inset 0 0 0 1px var(--gb),var(--ring)}
-.bar input{background:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
-.bar:focus-within{box-shadow:0 14px 36px var(--shc),inset 0 1.5px 0 var(--hl),var(--ring)}
+.bar input{background:transparent;box-shadow:none}
+.bar:focus-within{box-shadow:0 8px 24px var(--shc),inset 0 1.5px 0 var(--hl),var(--ring)}
 
-/* ---------- Slider / segmen / saklar: lintasan kaca ---------- */
-.seg{
-  background:var(--fill);
-  -webkit-backdrop-filter:var(--blur-s);backdrop-filter:var(--blur-s);
-  box-shadow:inset 0 1.5px 3px rgba(0,0,0,.14),inset 0 -1px 0 rgba(255,255,255,.35),0 1px 0 rgba(255,255,255,.3);
-}
-[data-theme=dark] .seg{box-shadow:inset 0 1.5px 4px rgba(0,0,0,.5),inset 0 -1px 0 rgba(255,255,255,.1)}
-.sw{box-shadow:inset 0 1.5px 3px rgba(0,0,0,.2),inset 0 -1px 0 rgba(255,255,255,.28),0 1px 0 rgba(255,255,255,.25)}
+/* ---------- Segmen / saklar ---------- */
+.seg{background:var(--fill);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 1.5px 3px rgba(0,0,0,.12),inset 0 -1px 0 rgba(255,255,255,.3)}
+[data-theme=dark] .seg{box-shadow:inset 0 1.5px 4px rgba(0,0,0,.55),inset 0 -1px 0 rgba(255,255,255,.08)}
+.sw{box-shadow:inset 0 1.5px 3px rgba(0,0,0,.2),inset 0 -1px 0 rgba(255,255,255,.25)}
 
-/* ---------- Menu samping ---------- */
-.drawer{
-  background:var(--sheen),color-mix(in srgb,var(--bg) 38%,transparent);
+/* ---------- Lapisan melayang: di sini blur benar-benar terlihat ---------- */
+.drawer,#t,.rdy,.dlg .box,.dlg.flat .box,.sheet .pn{
+  background:var(--sheen),color-mix(in srgb,var(--bg) 62%,transparent);
   -webkit-backdrop-filter:blur(40px) saturate(200%);backdrop-filter:blur(40px) saturate(200%);
   border:1px solid var(--gb);
-  box-shadow:0 24px 70px var(--shc),inset 0 1.5px 0 var(--hl),inset 0 0 30px rgba(255,255,255,.08);
+  box-shadow:0 20px 60px var(--shc),inset 0 1.5px 0 var(--hl);
 }
-.di.cur{background:var(--btn);box-shadow:inset 0 1.5px 0 var(--hl),0 2px 10px var(--shc)}
-.ico{box-shadow:0 4px 12px var(--shc),inset 0 1.5px 0 rgba(255,255,255,.35),inset 0 -1.5px 1px rgba(0,0,0,.18)}
-body.menu .scrim,body.dim .scrim{background:rgba(10,12,30,.34)}
-@media(min-width:1280px){
-  .drawer{background:var(--sheen),var(--card);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
-}
-
-/* ---------- Lapisan melayang: toast, "file siap", dialog, daftar negara ---------- */
-#t{background:var(--sheen),color-mix(in srgb,var(--bg) 52%,transparent);border:1px solid var(--gb)}
-.rdy{
-  background:var(--sheen),color-mix(in srgb,var(--bg) 50%,transparent);
-  border:1.5px solid color-mix(in srgb,var(--ac) 55%,transparent);
-  -webkit-backdrop-filter:blur(34px) saturate(190%);backdrop-filter:blur(34px) saturate(190%);
-}
-.dlg .box,.dlg.flat .box{background:var(--sheen),color-mix(in srgb,var(--bg) 52%,transparent);border:1px solid var(--gb);-webkit-backdrop-filter:blur(40px) saturate(200%);backdrop-filter:blur(40px) saturate(200%)}
-.dlg.on{background:rgba(10,12,30,.32)}
-.sheet .pn{background:var(--sheen),color-mix(in srgb,var(--bg) 50%,transparent);-webkit-backdrop-filter:blur(40px) saturate(200%);backdrop-filter:blur(40px) saturate(200%);border:1px solid var(--gb)}
+.rdy{border:1.5px solid color-mix(in srgb,var(--ac) 55%,transparent)}
+.di.cur{background:var(--btn);box-shadow:inset 0 1.5px 0 var(--hl),0 2px 8px var(--shc)}
+.ico{box-shadow:0 4px 10px var(--shc),inset 0 1.5px 0 rgba(255,255,255,.3),inset 0 -1.5px 1px rgba(0,0,0,.16)}
+body.menu .scrim,body.dim .scrim{background:rgba(0,0,0,.35)}
+.dlg.on{background:rgba(0,0,0,.35)}
 .pt{background:transparent}
-.pt::after{background:var(--gb)}
-.lh{background:color-mix(in srgb,var(--bg) 55%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.lh{background:color-mix(in srgb,var(--bg) 70%,transparent)}
 .ci.sel{background:var(--btn);box-shadow:inset 0 1px 0 var(--hl)}
-.ci:hover{background:rgba(255,255,255,.2)}
+.ci:hover{background:var(--fill)}
+@media(min-width:1280px){
+  .drawer{background:var(--sheen),var(--card);-webkit-backdrop-filter:none;backdrop-filter:none}
+}
 
-/* ---------- Detail kecil ---------- */
-.note{background:var(--fill);-webkit-backdrop-filter:var(--blur-s);backdrop-filter:var(--blur-s);box-shadow:inset 0 1px 0 var(--hl)}
-.m i{background:var(--fill);box-shadow:inset 0 1px 0 var(--hl)}
-.m i.hd{background:var(--ac);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
-.th{box-shadow:0 6px 18px var(--shc),inset 0 0 0 1px var(--gb)}
-main .drop{border-color:rgba(127,127,127,.45)}
-.qrc{box-shadow:0 8px 24px var(--shc),inset 0 0 0 1px rgba(255,255,255,.7)}
-.pgb{background:var(--fill);box-shadow:inset 0 1px 2px rgba(0,0,0,.12)}
+/* ---------- Detail ---------- */
+.note{background:var(--fill);box-shadow:inset 0 1px 0 var(--hl)}
+.m i{background:var(--fill)}
+.m i.hd{background:var(--ac)}
+.th{box-shadow:0 4px 14px var(--shc),inset 0 0 0 1px var(--gb)}
+main .drop{border:1.5px dashed rgba(127,127,127,.45)}
+.qrc{box-shadow:0 6px 20px var(--shc),inset 0 0 0 1px rgba(255,255,255,.6)}
+.pgb{background:var(--fill)}
 .credit{border-top:0}
 
-/* Tanpa dukungan backdrop-filter: kembali ke permukaan solid yang terbaca */
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  :root{--card:rgba(255,255,255,.9);--btn:#fff;--inp:rgba(255,255,255,.9)}
-  [data-theme=dark]{--card:#1c1c1e;--btn:#2c2c2e;--inp:#101012}
-  .drawer,.rdy,.dlg .box,.sheet .pn,#t,.lh{background:var(--card)}
+  .drawer,.rdy,.dlg .box,.sheet .pn,#t,.lh{background:var(--bg)}
 }
+
+/* Kartu Durability: label rata kiri dengan padding sama seperti isi kartu (HP & desktop) */
+.opt{padding:16px 20px;gap:12px}
+.opt .ol{align-self:flex-start;padding:0;margin:0;font-size:15px;font-weight:600;color:var(--t);text-align:left}
+.opt .sub2{text-align:left;padding:0;max-width:none}
+@media(max-width:959px){.opt{align-items:stretch}.opt .seg.sm{max-width:none;width:100%}}
+@media(min-width:960px){.opt .ol{align-self:center}}
