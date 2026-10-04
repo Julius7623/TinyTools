@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Turn a PDF into an editable Word (.docx) file. Free, no ads, no sign-up. Files are deleted after conversion.">
+<title>PDF to Word - Free online converter</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23111'/%3E%3Cpath d='M16 7v13M10.500 15l5.500 5.500 5.500-5.500M9 25h14' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="canonical" href="__ORIGIN__/pdf2word">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="TinyTools">
+<meta property="og:type" content="website"><meta property="og:site_name" content="TinyTools"><meta property="og:title" content="PDF to Word - Free online converter"><meta property="og:description" content="Turn a PDF into an editable Word (.docx) file. Free, no ads, no sign-up. Files are deleted after conversion."><meta property="og:url" content="__ORIGIN__/pdf2word"><meta property="og:image" content="__ORIGIN__/og.png"><meta name="twitter:card" content="summary_large_image">
+<script>
+try{var s=localStorage.getItem('theme')}catch(e){}
+document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')
+</script>
+<link rel="stylesheet" href="/base.css?v=9">
+<link rel="stylesheet" href="/ui.css?v=26">
+<script src="/shell.js?v=34" defer></script>
+<style>
+
+.drop{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;padding:30px 20px;text-align:center;border:1.5px dashed var(--gb);color:inherit;cursor:pointer;transition:opacity .3s,filter .3s,border-color .25s,background-color .25s}
+.drop b{font-size:18px;font-weight:600;letter-spacing:-.01em}.drop small{color:var(--t2);font-size:14px}
+.drop .ico{margin-bottom:4px}
+.drop.over{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 10%,var(--g))}
+.drop[aria-disabled=true]{opacity:.38;filter:grayscale(1);cursor:not-allowed}
+.job{margin-top:16px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.fr{display:flex;align-items:center;gap:12px;min-width:0}
+.fr .nm{display:flex;flex-direction:column;min-width:0;flex:1}
+.fr .nm b{font-size:16px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fr .nm small{color:var(--t2);font-size:14px}
+.st2{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:15px}
+.st2 b{font-weight:600}.st2 span{font:600 13px var(--mono);color:var(--t2)}
+.job .pgb{margin-top:0}
+.job .pgb i.det{animation:none;transition:width .45s var(--e)}
+.job p.hint{margin:0}
+.err .eb .btn,.err .eb .ghost{max-width:none;white-space:nowrap;padding:0 24px}
+.res .eb{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-top:4px}
+.res .eb .btn,.res .eb .ghost{width:100%;max-width:none;white-space:nowrap}
+.res .eb a{display:grid;place-items:center;text-decoration:none}
+.res .ok{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--ac);color:var(--act);flex:none}
+.res .ok svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+</style>
+</head>
+<body>
+<header>
+  <button class="mb" id="mb" aria-label="Open menu" aria-expanded="false" aria-controls="dr"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <button class="sw" id="tsw" role="switch" aria-label="Dark mode"><span class="kn">
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+  </span></button>
+</header>
+<main>
+
+  <h1>PDF to Word</h1>
+  <p class="sub">Turn a PDF into an editable Word file.</p>
+  <button class="glass drop" id="drop" type="button">
+    <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 16V5M7.500 9.500L12 5l4.500 4.500M5 19h14"/></svg></span>
+    <b id="dt">Choose a PDF</b>
+    <small>or drop it here &middot; 20 MB max</small>
+  </button>
+  <input type="file" id="f" accept="application/pdf,.pdf" hidden>
+  <div id="out" class="anim" aria-live="polite"></div>
+  <p class="foot">Your PDF is deleted right after conversion.<br><a class="lk" href="/how">How to use</a> &middot; <a class="lk" href="/legal">Privacy &amp; Terms</a></p>
+
+</main>
+<div class="glass" id="t" role="status" aria-live="polite"></div>
+<script>
+
+const $=s=>document.querySelector(s),drop=$('#drop'),inp=$('#f'),out=$('#out'),tt=$('#t');
+const MAXMB=20;let busy=0,xhr=null,tick=null;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const M=(e,f,o)=>window.GlassKit?GlassKit.morph(e,f,o):f();
+const say=(m,ms=3200)=>{GlassKit.blend(tt,m,tt.classList.contains('on'));tt.classList.add('on');clearTimeout(say.t);say.t=setTimeout(()=>tt.classList.remove('on'),ms)};
+const put=h=>{out.classList.remove('anim');M(out,()=>{out.innerHTML=h},{fade:false});void out.offsetWidth;out.classList.add('anim');clearTimeout(put.t);put.t=setTimeout(()=>out.classList.remove('anim'),1300)};
+const stp=()=>{};
+const MB=n=>n<1e6?Math.max(1,Math.round(n/1e3))+' KB':(n/1e6).toFixed(n<1e7?1:0)+' MB';
+const clock=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+const PDFI='<span class="ico"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 13h5M10 17h5"/></svg></span>';
+
+const ER={
+PDF_BAD:{title:"This isn't a valid PDF",why:'The file may be damaged, or it is a different kind of file.',tip:'Open it on your device first to check it, then choose it again.'},
+PDF_BIG:{title:'This PDF is too large',why:`This server can only convert files up to ${MAXMB} MB.`,tip:'Split the PDF into smaller parts, or reduce its size, then try again.'},
+PDF_PAGES:{title:'This PDF is too long',why:'Very long documents need more memory than this server has.',tip:'Convert it in smaller parts (for example, 100 pages at a time).'},
+PDF_LOCK:{title:'This PDF is locked',why:'It is protected with a password.',tip:'Remove the password in your PDF viewer, save a copy, then try again.'},
+PDF_SCAN:{title:'This PDF has no text to edit',why:'It looks like a scan: every page is a picture, so there is nothing to turn into Word text.',tip:'Use a PDF that was saved from a document or website, where you can select the text.'},
+BUSY:{title:'The server is busy',why:'Another file is being converted right now.',tip:'Try again in a minute.',retry:1},
+RATE:{title:'Too many requests',why:'The server needs a short break.',tip:'Wait a minute, then try again.',retry:1},
+TIMEOUT:{title:'This took too long',why:'The document may be very large or complex.',tip:'Try a smaller PDF, or try again.',retry:1},
+EXPIRED:{title:'This file has expired',why:'Converted files are removed after a few minutes.',tip:'Choose the PDF again to convert it once more.'},
+FAILED:{title:"Couldn't convert this PDF",why:'Something went wrong while reading it.',tip:'Try again, or try a different PDF.',retry:1}};
+const NET={title:'No connection',why:"We couldn't reach the server.",tip:'Check your internet connection, then try again.',retry:1};
+const GEN={title:'Something went wrong',why:'An unexpected error happened on our side.',tip:'Try again in a moment.',retry:1};
+const explain=e=>{if(!e)return GEN;if(e.net)return NET;return ER[e.code]||(e.status===413?ER.PDF_BIG:e.status===429?ER.RATE:GEN)};
+let last=null;
+function fail(e){stop();const x=explain(e);stp(1);drop.style.display='none';const rt=x.retry&&last;
+ put(`<div class="glass err" role="alert"><div class="eic"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 16.5v.01"/><path d="M10.300 4.500L3.500 17a2 2 0 0 0 1.700 3h13.600a2 2 0 0 0 1.700-3L13.700 4.500a2 2 0 0 0-3.400 0z"/></svg></div><b>${x.title}</b><p>${x.tip}</p><div class="eb">${rt?'<button class="btn" id="rt" type="button">Try again</button>':''}<button class="${rt?'ghost':'btn'}" id="ch" type="button">Choose another PDF</button></div></div>`);
+ const r=$('#rt');if(r)r.onclick=()=>start(last);$('#ch').onclick=again}
+
+// Kembali ke kotak "Choose a PDF" (setelah selesai atau saat gagal). Di desktop berhenti di kotak itu (bisa klik atau seret file); di layar sentuh langsung membuka pemilih file.
+function again(){drop.style.display='';put('');stp(1);drop.focus({preventScroll:true});if(!matchMedia('(hover:hover) and (pointer:fine)').matches)inp.click()}
+
+// Saat berjalan: area pilih file diredupkan dan tidak bisa dipakai, supaya jelas harus menunggu
+function lock(v){busy=v;v?drop.setAttribute('aria-disabled','true'):drop.removeAttribute('aria-disabled')}
+function stop(){clearInterval(tick);tick=null;lock(0);xhr=null}
+
+function card(file,title,right,pct,det){
+ return `<div class="glass job"><div class="fr">${PDFI}<div class="nm"><b>${esc(file.name)}</b><small>${MB(file.size)}</small></div></div>
+ <div class="st2"><b id="jt">${title}</b><span id="jp">${right}</span></div>
+ <span class="pgb"><i id="bar" class="${det?'det':''}" style="${det?`width:${pct}%`:''}"></i></span>
+ <p class="hint">Keep this page open.</p></div>`}
+
+function start(file){
+ if(!file||busy)return;
+ last=file;
+ if(!/\.pdf$/i.test(file.name)&&file.type!=='application/pdf'||!file.size)return fail({code:'PDF_BAD'});
+ if(file.size>MAXMB*1048576)return fail({code:'PDF_BIG'});
+ drop.style.display='';lock(1);stp(1);put(card(file,'Uploading…','0%',0,1));
+ xhr=new XMLHttpRequest();
+ xhr.open('POST','/api/p2w?n='+encodeURIComponent(file.name));
+ xhr.setRequestHeader('Content-Type','application/pdf');
+ xhr.upload.onprogress=e=>{if(!e.lengthComputable)return;const p=Math.round(e.loaded/e.total*100),b=$('#bar'),t=$('#jp');if(b)b.style.width=p+'%';if(t)t.textContent=p+'%'};
+ xhr.upload.onload=()=>{stp(2);const t=$('#jt'),p=$('#jp'),b=$('#bar');if(t)GlassKit.blend(t,'Converting…');if(p)p.textContent='0:00';if(b){b.classList.remove('det');b.style.width=''}};
+ xhr.onerror=()=>fail({net:1});
+ xhr.onload=()=>{let d={};try{d=JSON.parse(xhr.responseText)}catch{}
+  if(xhr.status>=400)return fail({code:d.code,status:xhr.status});
+  poll(d.id,file)};
+ xhr.send(file)}
+
+function poll(id,file){
+ const t0=Date.now();let miss=0,bar=$('#bar');
+ clearInterval(tick);
+ tick=setInterval(async()=>{
+  const p=$('#jp');if(p&&!(bar&&bar.classList.contains('det')))p.textContent=clock(Math.floor((Date.now()-t0)/1000));
+  if(poll.q)return;poll.q=1;
+  try{const r=await fetch('/api/status/'+id,{cache:'no-store'}),d=await r.json();miss=0;
+   if(!r.ok)throw Object.assign(new Error(),{code:d.code,status:r.status});
+   if(d.st==='err'){fail({code:d.code})}
+   else if(d.st==='done'){done(d,file)}
+   else if(d.pct>=98){bar=$('#bar');if(bar){bar.classList.remove('det');bar.style.width=''}const jt=$('#jt');if(jt&&jt.textContent!=='Finishing…')GlassKit.blend(jt,'Finishing…')} // tahap akhir: bar bergerak lagi + waktu berjalan, bukan persen yang tampak macet di 98%
+   else if(d.pct>0){bar=$('#bar');if(bar){bar.classList.add('det');bar.style.width=d.pct+'%'}const q=$('#jp');if(q)q.textContent=d.pct+'%'}
+  }catch(e){if(e.code||e.status)fail(e);else if(++miss>8)fail({net:1})}
+  finally{poll.q=0}},1000)}
+
+function done(d,file){
+ stop();stp(3);drop.style.display='none'; // hasil sudah tampil: area pilih file disembunyikan, "Convert another" yang membukanya lagi
+ put(`<div class="glass job res"><div class="fr"><span class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg></span><div class="nm"><b>${esc(d.name)}</b><small>Word · ${MB(d.size)}</small></div></div>
+ <div class="eb"><a class="btn" id="dl" href="/api/file/${encodeURIComponent(d.token)}" download>Download</a><button class="ghost" id="again" type="button">Convert another</button></div>
+ <p class="hint">After downloading, open it and check the layout.</p></div>`);
+ $('#again').onclick=again;
+ const dl=$('#dl');let wb=null;
+ if(GlassKit.app){ // di app layar utama: siapkan file dulu supaya ketukan langsung membuka lembar Bagikan (bukan pratinjau iOS)
+  const lb=dl.textContent;dl.textContent='Preparing…';dl.setAttribute('aria-disabled','true');dl.style.pointerEvents='none';dl.style.opacity='.6';
+  const rdy=()=>{dl.textContent=lb;dl.removeAttribute('aria-disabled');dl.style.pointerEvents='';dl.style.opacity=''};
+  fetch(dl.href).then(r=>r.ok?r.blob():null).then(x=>{if(x)wb=new Blob([x],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})}).catch(()=>{}).finally(rdy)}
+ dl.addEventListener('click',e=>{if(wb){e.preventDefault();GlassKit.save(wb,d.name).then(()=>say('Done'))}else say('Download started')})}
+
+drop.onclick=()=>{if(busy)return say('One moment. Still converting.');inp.click()};
+inp.onchange=()=>{const f=inp.files&&inp.files[0];inp.value='';start(f)};
+['dragenter','dragover'].forEach(n=>drop.addEventListener(n,e=>{e.preventDefault();if(!busy)drop.classList.add('over')}));
+['dragleave','drop'].forEach(n=>drop.addEventListener(n,e=>{e.preventDefault();drop.classList.remove('over')}));
+drop.addEventListener('drop',e=>{if(busy)return say('One moment. Still converting.');const f=e.dataTransfer&&e.dataTransfer.files[0];if(f)start(f)});
+addEventListener('dragover',e=>e.preventDefault());addEventListener('drop',e=>e.preventDefault()); // lepas di luar kotak tidak boleh membuka PDF di tab ini
+addEventListener('beforeunload',e=>{if(busy){e.preventDefault();e.returnValue=''}});
+
+</script>
+</body>
+</html>

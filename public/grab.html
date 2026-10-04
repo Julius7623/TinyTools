@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Download public videos from Instagram, TikTok, Facebook, and X (formerly Twitter) when the link is supported. Free, no ads, no sign-up.">
+<title>Video Downloader - Save videos from a link</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23111'/%3E%3Cpath d='M16 7v13M10.500 15l5.500 5.500 5.500-5.500M9 25h14' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<script>
+try{var s=localStorage.getItem('theme')}catch(e){}
+document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')
+</script>
+<link rel="canonical" href="__ORIGIN__/grab">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="TinyTools">
+<meta property="og:type" content="website"><meta property="og:site_name" content="TinyTools"><meta property="og:title" content="Video Downloader - Save videos from a link"><meta property="og:description" content="Download public videos from Instagram, TikTok, Facebook, and X (formerly Twitter) when the link is supported. Free, no ads, no sign-up."><meta property="og:url" content="__ORIGIN__/grab"><meta property="og:image" content="__ORIGIN__/og.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/base.css?v=9">
+<link rel="stylesheet" href="/ui.css?v=26">
+<script src="/shell.js?v=34" defer></script>
+
+</head>
+<body data-own-theme>
+<header>
+  <button class="mb" id="mb" aria-label="Open menu" aria-expanded="false" aria-controls="dr"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <button class="sw" id="tsw" role="switch" aria-label="Dark mode"><span class="kn">
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+  </span></button>
+</header>
+<main>
+  <h1 data-i="h1"></h1>
+  <p class="sub" data-i="sub"></p>
+  <div class="glass bar">
+    <input id="u" type="url" enterkeyhint="go" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="url" aria-label="URL" autocomplete="off">
+    <button class="clr hide" id="x" data-fast type="button" aria-label="Clear link"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <span class="pill hide" id="bd" role="img"></span>
+    <button class="ghost" id="p" data-i="paste"></button>
+    <button class="btn" id="go" data-i="go"></button>
+  </div>
+  <div id="out" class="anim" aria-live="polite"><p class="empty" data-i="empty"></p></div>
+  <p class="foot"><span data-i="foot"></span><br><a class="lk" href="/how">How to use</a> &middot; <a class="lk" href="/legal">Privacy &amp; Terms</a></p>
+</main>
+<div class="glass" id="t" role="status" aria-live="polite"></div>
+<script>
+const L={en:{doc:'Video Downloader - Save videos from a link',h1:'Save a video',sub:'Paste a link from Instagram, TikTok, Facebook, or X.',ph:'Paste a video link',paste:'Paste',go:'Get video',empty:'',foot:'For content you own or may use. Nothing is stored.',bv:'Video · Best quality',sv:'Video · Smaller file',ba:'Audio only · Best quality',orig:'Video',proc:'Processing…',fin:'Finishing…',rec:'Choose a format',rech:'',more:'More formats',less:'Fewer formats',av:'Video with audio',avh:'',vo:'Video with audio',voh:'',ao:'Audio only',aoh:'',upto:'Up to ',aud:'audio',best:'Best quality',compat:'Most compatible',small:'Smaller file',unk:'Size unknown',prep:'Preparing…',started:'Download started · ',clip:"Can't read the clipboard. Paste the link yourself.",look:'Finding your video…',wait:'This takes a few seconds.',wait2:'One moment. Still preparing.',slow:'Still working. The server may be waking up.'}};
+const $=s=>document.querySelector(s),u=$('#u'),out=$('#out'),tt=$('#t');
+const store=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}};
+// Aplikasi layar utama iPhone/iPad: tidak ada tombol kembali, jadi file dibuka lewat lembar Bagikan (Save to Files / Save Video), bukan dinavigasi ke pratinjau
+const appMode=(/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1))&&(navigator.standalone===true||matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches);
+const lang='en';let cur=null,lastErr=null,looking=0,ac=null;
+const t=k=>L[lang][k];
+const pickUrl=s=>{const m=String(s||'').match(/https?:\/\/[^\s<>"']+/i);return m?m[0].replace(/[)\]}.,;:!?]+$/,''):''}; // ambil link dari teks share (TikTok/IG menyalin teks + link)
+const sites={instagram:'Instagram',facebook:'Facebook','fb.':'Facebook',tiktok:'TikTok','x.com':'X',twitter:'X',reddit:'Reddit',vimeo:'Vimeo',twitch:'Twitch'};
+const IC={
+Instagram:'<svg viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#feda75"/><stop offset=".35" stop-color="#fa7e1e"/><stop offset=".65" stop-color="#d62976"/><stop offset="1" stop-color="#4f5bd5"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="6" fill="url(#ig)"/><rect x="6.2" y="6.2" width="11.6" height="11.6" rx="3.800" fill="none" stroke="#fff" stroke-width="1.700"/><circle cx="12" cy="12" r="2.800" fill="none" stroke="#fff" stroke-width="1.700"/><circle cx="16.100" cy="7.900" r=".9" fill="#fff"/></svg>',
+Facebook:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1877f2"/><path d="M13.500 22v-7.600h2.500l.4-3h-2.900V9.600c0-.9.300-1.500 1.500-1.500h1.500V5.400c-.3 0-1.200-.1-2.200-.1-2.200 0-3.700 1.300-3.700 3.800v2.300H8v3h2.600V22z" fill="#fff"/></svg>',
+X:'<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="#000" stroke="#fff" stroke-opacity=".3"/><path d="M7 6.500l10 11M17 6.500L7 17.500" stroke="#fff" stroke-width="1.900" stroke-linecap="round"/></svg>',
+TikTok:'<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="#000" stroke="#fff" stroke-opacity=".3"/><g fill="none" stroke-width="1.900" stroke-linecap="round"><path id="tn" d="M12.800 6.500v8.200a2.400 2.400 0 1 1-2.400-2.400M12.800 6.500c.4 2 1.800 3.200 4 3.400" stroke="#25f4ee" transform="translate(-.7 -.5)"/><path d="M12.800 6.500v8.200a2.400 2.400 0 1 1-2.400-2.400M12.800 6.500c.4 2 1.800 3.200 4 3.400" stroke="#fe2c55" transform="translate(.7 .5)"/><path d="M12.800 6.500v8.200a2.400 2.400 0 1 1-2.400-2.400M12.800 6.500c.4 2 1.800 3.200 4 3.400" stroke="#fff"/></g></svg>',
+Reddit:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ff4500"/><ellipse cx="12" cy="13.400" rx="5.600" ry="3.800" fill="#fff"/><circle cx="9.800" cy="13" r="1" fill="#ff4500"/><circle cx="14.200" cy="13" r="1" fill="#ff4500"/><circle cx="16.500" cy="7.500" r="1.100" fill="#fff"/><path d="M12 9.600l.9-3.200 3.200.8" fill="none" stroke="#fff" stroke-width="1.100"/></svg>',
+Vimeo:'<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="#1ab7ea"/><path d="M6.500 10l1 1c1-.8 1.700-.5 2 .5l1.200 4.300c.4 1.200 1.200 1.200 2.200.3 1.800-1.500 3.300-3.300 3.400-5 .1-1.500-1-2-2.100-1.700-1 .3-1.700 1-2 2.200" fill="none" stroke="#fff" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+Twitch:'<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="#9146ff"/><path d="M6.500 5.500h11v7.500l-3 3h-2.500l-2 2v-2H6.500z" fill="#fff"/><path d="M11 8.500v3M14.500 8.500v3" stroke="#9146ff" stroke-width="1.500" stroke-linecap="round"/></svg>',
+Link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.700 0l3-3a4 4 0 0 0-5.700-5.700l-1 1M14 10a4 4 0 0 0-5.700 0l-3 3a4 4 0 0 0 5.700 5.700l1-1"/></svg>'};
+const disp=s=>s==='X'?'X (formerly Twitter)':s;
+const site=s=>(Object.entries(sites).find(([k])=>s.includes(k))||[])[1]||(s.startsWith('http')?'Link':'');
+const MB=(n,ex)=>!n?t('unk'):(ex?'':'~')+(n>=1e9?(n/1e9).toFixed(2)+' GB':n<1e7?Math.max(.1,n/1e6).toFixed(1)+' MB':Math.round(n/1e6)+' MB');
+const T=s=>s?[Math.floor(s/3600),Math.floor(s/60)%60,Math.floor(s%60)].filter((x,i)=>i||x).map((x,i)=>i?String(x).padStart(2,'0'):x).join(':'):'';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const say=(m,ms=3800)=>{GlassKit.blend(tt,m,tt.classList.contains('on'));tt.classList.add('on');clearTimeout(say.t);say.t=setTimeout(()=>tt.classList.remove('on'),ms)};
+
+const main=$('main'),tsw=$('#tsw'),dark=()=>document.documentElement.dataset.theme==='dark';
+function sync(){tsw.classList.toggle('on',dark());tsw.setAttribute('aria-checked',dark())}
+function apply(){
+  document.documentElement.lang=lang;document.title=t('doc');u.placeholder=t('ph');
+  document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+  out.classList.remove('anim');
+  if(cur)show(cur);else if(lastErr)fail(lastErr);
+  sync();
+}
+function theme(v){
+  document.documentElement.dataset.theme=v;store('theme',v);
+  sync();
+}
+function sw(el,get,set){
+  let id=null,x0=0,p0=0,trv=0,mv=false;
+  el.addEventListener('pointerdown',e=>{if(e.button)return;id=e.pointerId;el.setPointerCapture(id);x0=e.clientX;trv=el.offsetWidth-44;p0=get()?trv:0;mv=false;clearTimeout(el._t);el.classList.add('press')});
+  el.addEventListener('pointermove',e=>{if(e.pointerId!==id)return;const dx=e.clientX-x0;if(!mv&&Math.abs(dx)<4)return;mv=true;el.classList.add('drag');el.style.setProperty('--x',Math.max(0,Math.min(trv,p0+dx))+'px')});
+  const end=(e,ok)=>{if(e.pointerId!==id)return;id=null;let v=get();
+    if(ok)v=mv?parseFloat(el.style.getPropertyValue('--x'))>trv/2:!v;
+    el.classList.remove('drag');el.style.removeProperty('--x');clearTimeout(el._t);if(v!==get()){el._t=setTimeout(()=>el.classList.remove('press'),180);set(v)}else el.classList.remove('press')};
+  el.addEventListener('pointerup',e=>end(e,true));el.addEventListener('pointercancel',e=>end(e,false));
+  el.addEventListener('click',e=>{if(e.detail===0)set(!get())});
+}
+sw(tsw,dark,v=>theme(v?'dark':'light'));
+
+const RK='recent',recents=()=>{try{return JSON.parse(store(RK)||'[]')}catch(e){return[]}};
+function remember(url,title){const l=recents().filter(x=>x.u!==url);l.unshift({u:url,t:title||url});store(RK,JSON.stringify(l.slice(0,4)))}
+function emptyHTML(){const l=recents();
+  return '<p class="empty">'+t('empty')+'</p>'+(l.length?'<div class="rch"><b>Recent</b><button class="rcx" type="button">Clear</button></div>'+l.map(x=>{const s=site(x.u);return `<button class="rc" type="button" data-u="${esc(x.u)}">${IC[s]||IC.Link}<span><b>${esc(x.t)}</b><small>${esc(disp(s)||'Link')}</small></span></button>`}).join(''):'')}
+const stp=()=>{};
+const M=(e,f,o)=>window.GlassKit?GlassKit.morph(e,f,o):f();
+const put=h=>{stp(/glass pv"/.test(h)?2:1);out.classList.remove('anim');M(out,()=>{out.innerHTML=h},{fade:false});void out.offsetWidth;out.classList.add('anim');clearTimeout(put.t);put.t=setTimeout(()=>out.classList.remove('anim'),1300)}; // animasi masuk cukup sekali; lepas kelasnya supaya tidak terulang saat tombol ditekan
+const ER={
+BOT:{title:'This site is blocking our server',why:'Some platforms block requests that come from data centers, even for public videos.',tip:'Try again later, or try a video from another platform.',retry:1},
+BAD_URL:{title:"That doesn't look like a valid link",why:'The link may be cut off or mistyped.',tip:'Copy the full link from the app or browser, then paste it again.'},
+ADDR:{title:"This address can't be used",why:'Links to private or local addresses are blocked for safety.',tip:'Use a public video link instead.'},
+PRIVATE:{title:'This video is private',why:'It needs a login, or only certain people can watch it.',tip:'Try a public video, or one you can open without signing in.'},
+UNSUPPORTED:{title:"This link isn't supported yet",why:"We couldn't find a video on this page.",tip:'Make sure the link opens a video, not a profile or search page.'},
+UNAVAILABLE:{title:"This video isn't available",why:'It may have been deleted, or it is blocked in some regions.',tip:'Check that it still plays in your browser.'},
+RATE:{title:'Too many requests',why:'The platform or server needs a short break.',tip:'Wait a minute, then try again.',retry:1},
+TOO_BIG:{title:'This file is too large',why:"This server can't prepare files that big.",tip:'Pick a lower quality, or choose audio only.'},
+BAD_FORMAT:{title:"That format isn't available",why:'The list may be out of date.',tip:'Look up the link again and choose another format.'},
+BUSY:{title:'The server is busy',why:'Other downloads are running right now.',tip:'Try again in a few seconds.',retry:1},
+EXPIRED:{title:'This file has expired',why:'Prepared files are removed after a few minutes.',tip:'Tap the format again to prepare a new one.'},
+LOGIN:{title:'This platform wants a login',why:'Some posts (often on Instagram and Facebook) only open for signed-in accounts, or the platform is limiting our server.',tip:'Try a public post, or try again later.',retry:1},
+BLOCKED:{title:'The platform is blocking our server',why:'Some platforms block requests from data centers, even for public videos.',tip:'Try again later, or try a link from another platform.',retry:1},
+EXTRACT:{title:"Couldn't read this video",why:'The platform may have changed, or it blocked our request.',tip:'Try again in a few minutes. If it keeps failing, the platform is probably blocking this server.',retry:1},
+FORMAT:{title:"That format isn't available",why:'The platform changed its list since you looked it up.',tip:'Look up the link again and choose another format.',retry:1},
+TIMEOUT:{title:'This took too long',why:'The video may be very large, or the server is busy.',tip:'Try a lower quality, or try again.',retry:1},
+FAILED:{title:"Couldn't process this video",why:'Something went wrong while reading it.',tip:'Try again, or pick a different format.',retry:1}};
+const NET={title:'No connection',why:"We couldn't reach the server.",tip:'Check your internet connection, then try again.',retry:1};
+const GEN={title:'Something went wrong',why:'An unexpected error happened on our side.',tip:'Try again in a moment.',retry:1};
+const explain=e=>{if(!e)return GEN;if(e instanceof TypeError||/failed to fetch|load failed|network/i.test(e.message))return NET;
+ return ER[e.code]||(e.status===429?ER.RATE:GEN)};
+const fail=e=>{lastErr=e;const x=explain(e);
+  put(`<div class="glass err" role="alert"><div class="eic"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 16.5v.01"/><path d="M10.300 4.500L3.500 17a2 2 0 0 0 1.700 3h13.600a2 2 0 0 0 1.700-3L13.700 4.500a2 2 0 0 0-3.400 0z"/></svg></div><b>${x.title}</b><p>${x.tip}</p><div class="eb">${x.retry?'<button class="btn" id="rt">Try again</button>':''}<button class="ghost" id="cl">Clear link</button></div></div>`);
+  const r=$('#rt');if(r)r.onclick=()=>load();$('#cl').onclick=()=>xb.click()};
+const infoCache=new Map();let slowT;
+function loading(){
+  put(`<div class="glass pv skl"><div class="th"></div><div class="info"><i></i><i></i><i class="s"></i></div></div><div class="glass sk"><div class="spin"></div><b>${t('look')}</b><small id="lw">${t('wait')}</small></div>`);
+  clearTimeout(slowT);slowT=setTimeout(()=>{const e=$('#lw');if(e)GlassKit.blend(e,t('slow'))},7000);
+  lock(true);
+}
+function done(){clearTimeout(slowT);lock(false)}
+const xb=$('#x'),gh=$('#p');
+function lock(v){$('#go').disabled=xb.disabled=gh.disabled=u.readOnly=v}
+async function load(){
+  if($('#go').disabled)return;
+  let url=pickUrl(u.value)||u.value.trim();if(url!==u.value.trim()){u.value=url;u.oninput()}
+  if(url&&!/^[a-z][a-z0-9+.-]*:\/\//i.test(url)&&/^[^\s\/]+\.[^\s\/]{2,}(\/|$|\?)/.test(url)){url='https://'+url.replace(/^\/+/,'');u.value=url;u.oninput()}
+  if(!/^https?:\/\//i.test(url)){const b=$('.bar');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');return say("That doesn't look like a link. Paste the full address.",4500)}
+  cur=lastErr=null;loading();looking=1;ac=new AbortController();const sig=ac.signal;
+  try{
+    const c=infoCache.get(url);let d;
+    if(c&&Date.now()-c.t<3e5)d=c.d; // link sama dalam 5 menit: tanpa permintaan baru ke server
+    else{const r=await fetch('/api/info?url='+encodeURIComponent(url),{signal:sig});d=await r.json();
+      if(!r.ok)throw Object.assign(Error(d.error),{status:r.status,code:d.code});infoCache.set(url,{d,t:Date.now()})}
+    cur=d;cur.src=url;show(d);remember(url,d.title);try{sessionStorage.setItem('gk:u',url)}catch{}
+  }catch(e){if(e.name!=='AbortError')fail(e)}finally{looking=0;done()}
+}
+
+function show(d){
+  const by=k=>d.formats.filter(f=>f.k===k),key=f=>f.h*1e4+f.br,desc=(x,y)=>key(y)-key(x);
+  const av=by('av').sort(desc),v=by('v').sort(desc),a=by('a').sort((x,y)=>y.br-x.br);
+  const vid=[...av,...v].sort(desc);
+  const best=vid[0],compat=vid.find(f=>f.vc==='H.264'&&f.ext==='mp4'),small=av.filter(f=>f.size).sort((x,y)=>x.size-y.size)[0];
+  const tag=f=>f===best?t('best'):f===compat?t('compat'):f===small?t('small'):'';
+  const rate=n=>n>=1000?(n/1e3).toFixed(1)+' Mbps':n+' kbps';
+  const card=(f,i,lbl,full)=>{
+    const main=f.h?f.h+'p'+(f.fps>30?f.fps:''):f.k==='a'?f.ext.toUpperCase():t('orig'),end=f.h?f.ext.toUpperCase():(f.k==='a'?(f.br?rate(f.br):t('aud').toUpperCase()):f.ext.toUpperCase());
+    const chips=[full?[f.vc,f.ac].filter(x=>x&&x!==f.ext.toUpperCase()).join(' + '):'',full&&f.h&&f.br?rate(f.br):'',MB(f.size,f.ex)].filter(Boolean).map(x=>`<i>${esc(x)}</i>`).join('')+(f.hdr?'<i class="hd">HDR</i>':'');
+    return `<button class="fmt" style="--n:${Math.min(i,10)}" data-f="${esc(f.id)}" data-k="${f.k}" data-e="${f.ext}" data-h="${f.h}">${(lbl||tag(f))?`<span class="tag">${lbl||tag(f)}</span>`:''}<b>${main}<em>${end}</em></b><span class="m">${chips}</span></button>`};
+  const sec=(h,hint,l)=>l.length?`<div class="sh"><h2>${h}</h2><span>${hint}</span></div><div class="grid">${l.map((f,i)=>card(f,i,'',true)).join('')}</div>`:'';
+  // Pilihan utama (maks. 4): Best quality, Most compatible (H.264 <=1080p), Smaller file (~720p), Audio only. Kartu kembar dibuang; sisanya masuk More.
+  const picks=[],add=(f,l)=>f&&!picks.some(p=>p[0]===f)&&picks.push([f,l]);
+  const cp=vid.find(f=>f.vc==='H.264'&&f.ext==='mp4'&&(!f.h||f.h<=1080));
+  add(best,t('best'));add(cp,t('compat'));
+  const rest0=vid.filter(f=>f!==best&&f!==cp),pool=rest0.filter(f=>!f.h||f.h>=360),cand=pool.length?pool:rest0;
+  const refs=[best,cp].filter(f=>f&&f.size).map(f=>f.size),lim=refs.length?Math.min(...refs):0,ok=f=>!lim||(f.size&&f.size<lim*.9), // "Smaller file" harus benar-benar lebih kecil dari Best quality / Most compatible
+    sm=cand.filter(f=>ok(f)&&f.h>=360&&f.h<=720).sort(desc)[0]||cand.filter(f=>ok(f)&&f.size).sort((x,y)=>x.size-y.size)[0]||(lim?null:[...cand].sort((x,y)=>key(x)-key(y))[0]);
+  add(sm,t('small'));add(a[0],t('ao'));
+  const g=f=>!picks.some(p=>p[0]===f),rest=d.formats.filter(g).length;
+  const src=site(u.value.trim());
+  const sum=[best&&best.h?t('upto')+best.h+'p':''].filter(Boolean).map(x=>`<i>${esc(x)}</i>`).join('');
+  put(`<div class="glass pv"><div class="th">${d.thumb?`<img src="${esc(d.thumb)}" alt="" referrerpolicy="no-referrer">`:''}${d.dur?`<span class="dur">${T(d.dur)}</span>`:''}</div><div class="info">${src?`<span class="src">${IC[src]||IC.Link}${esc(disp(src))}</span>`:''}<b>${esc(d.title)}</b>${d.who?`<small>${esc(d.who)}</small>`:''}<span class="m">${sum}</span></div></div>`
+    +`<div class="sh"><h2>${t('rec')}</h2><span>${t('rech')}</span></div><div class="grid">${picks.map(([f,l],i)=>card(f,i,l)).join('')}</div>`
+    +(rest?`<button class="more" id="more" type="button" aria-expanded="false" aria-controls="mx"><span>${t('more')}</span><i></i></button><div class="mx" id="mx" inert><div>${sec(t('vo'),t('voh'),vid.filter(g))+sec(t('ao'),t('aoh'),a.filter(g))}</div></div>`:''));
+  const mb=$('#more');if(mb)mb.onclick=()=>{const mx=$('#mx'),o=!mx.classList.contains('open');mx.classList.toggle('open',o);mx.inert=!o;mb.setAttribute('aria-expanded',o);mb.firstChild.textContent=o?t('less'):t('more')};
+}
+
+// Menunggu server selesai menyiapkan file. Gangguan jaringan sesaat (sinyal HP, pindah aplikasi) tidak membatalkan unduhan.
+async function poll(id,on){
+  const t0=Date.now();let miss=0;
+  for(;;){
+    await new Promise(r=>setTimeout(r,1200));
+    if(Date.now()-t0>25*60e3)throw Object.assign(Error('timeout'),{code:'TIMEOUT'});
+    let d;
+    try{const r=await fetch('/api/status/'+id,{cache:'no-store'});d=await r.json();
+      if(!r.ok)throw Object.assign(Error(d.error),{status:r.status,code:d.code});miss=0}
+    catch(e){if(e.code||++miss>10)throw e;continue}
+    if(d.st==='err')throw Object.assign(Error('failed'),{code:d.code});
+    if(d.st==='done')return d;
+    on(d.pct||0)}
+}
+out.onclick=async ev=>{
+  const rc=ev.target.closest('.rc');
+  if(rc){u.value=rc.dataset.u;u.oninput();return load()}
+  if(ev.target.closest('.rcx')){store('recent','[]');return put(emptyHTML())}
+  const b=ev.target.closest('.fmt');
+  if(out.dataset.busy){if(b&&b.getAttribute('aria-disabled')==='true')say(t('wait2'));return}
+  if(!b)return;
+  out.dataset.busy=1;syncBack();out.querySelectorAll('.fmt.ok').forEach(x=>{if(!pend||pend.card!==x)x.classList.remove('ok')});
+  // semua opsi lain diredupkan + kolom link dikunci: jelas bahwa sekarang harus menunggu
+  out.querySelectorAll('.fmt').forEach(x=>{if(x!==b)x.setAttribute('aria-disabled','true')});lock(true);
+  const {f,k,e,h}=b.dataset,old=b.innerHTML,t0=Date.now();let pc=0;
+  b.disabled=true;b.classList.add('busy');
+  M(b,()=>{b.innerHTML=`<b><span class="tl">${t('prep')}</span><em class="el">0:00</em></b><span class="pgb"><i></i></span><span class="hint">Keep this page open.</span>`},{fade:false});
+  // Satu angka saja: bar bergerak = waktu berjalan; bar terisi = persen. Judul mengikuti tahap (0 menyiapkan, 1 memproses, 2 menyelesaikan).
+  let stage=0;
+  const paint=()=>{const s=Math.floor((Date.now()-t0)/1000),el=b.querySelector('.el');if(!el)return;el.textContent=stage===1?pc+'%':Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+  const setStage=n=>{if(stage===n)return;stage=n;const l=b.querySelector('.tl');if(l)GlassKit.blend(l,n===2?t('fin'):n===1?t('proc'):t('prep'));if(n===2){const i=b.querySelector('.pgb i');if(i)i.removeAttribute('style')}paint()};
+  const tick=setInterval(paint,1000);
+  try{
+    const r=await fetch(`/api/prepare?url=${encodeURIComponent((cur&&cur.src)||u.value.trim())}&f=${encodeURIComponent(f)}&k=${k}&e=${e}&h=${h||0}&i=${(cur&&cur.item)||1}`),j=await r.json();
+    if(!r.ok)throw Object.assign(Error(j.error),{status:r.status,code:j.code});
+    const d=await poll(j.id,p=>{pc=p;if(p>=98)return setStage(2);const i=b.querySelector('.pgb i');if(i&&p>0){setStage(1);i.style.animation='none';i.style.transform='none';i.style.width=p+'%';i.style.transition='width .6s';paint()}});
+    const href='/api/file/'+d.token,link=h=>{const l=document.createElement('a');l.href=h;l.download=d.name;document.body.append(l);l.click();l.remove()};
+    let blob=null;
+    if(appMode&&navigator.share){try{const r=await fetch(href);if(r.ok)blob=await r.blob()}catch{}} // diambil lebih dulu supaya tombol Save langsung bisa membuka lembar Bagikan saat diketuk
+    const go=async()=>{
+      if(appMode&&blob&&navigator.canShare){
+        try{const file=new File([blob],d.name,{type:blob.type||'video/mp4'});
+          if(navigator.canShare({files:[file]})){await navigator.share({files:[file]});return true}}
+        catch(e){if(e&&e.name==='AbortError')return false}
+        const h=URL.createObjectURL(blob);link(h);setTimeout(()=>URL.revokeObjectURL(h),60000);return true}
+      link(href);return true};
+    const held=document.hidden||appMode;
+    if(held)hold({go,name:d.name,size:d.size,card:b}); // di aplikasi layar utama: ketukan pengguna dibutuhkan untuk lembar Bagikan; di tab lain: unduhan otomatis bisa diblokir
+    else{go();stp(3);say(t('started')+MB(d.size,true))}
+    b.classList.add('ok');if(!held)setTimeout(()=>b.classList.remove('ok'),10000); // di mode ditahan, centang bertahan sampai file benar-benar disimpan
+  }catch(x){const e2=explain(x);say(e2.title+'. '+e2.tip,5200)}
+  finally{clearInterval(tick);delete out.dataset.busy;syncBack();out.querySelectorAll('.fmt[aria-disabled]').forEach(x=>x.removeAttribute('aria-disabled'));lock(false);b.classList.remove('busy');M(b,()=>{b.innerHTML=old},{fade:false});b.disabled=false}
+};
+
+
+
+u.oninput=()=>{keepUrl=u.value;const b=$('#bd'),v=u.value.trim(),x=site(v);
+  if(x){b.innerHTML=IC[x]||IC.Link;b.setAttribute('aria-label',disp(x));b.title=disp(x);b.classList.remove('hide')}else b.classList.add('hide');
+  xb.classList.toggle('hide',!v);gh.classList.toggle('hide',!!v)};
+xb.onclick=()=>{if(xb.disabled)return;u.value='';try{sessionStorage.removeItem('gk:u')}catch{}cur=lastErr=null;clearTimeout(slowT);u.oninput();put(emptyHTML());u.focus()};
+u.onpaste=e=>{const x=(e.clipboardData||window.clipboardData).getData('text'),l=pickUrl(x);if(l&&l!==x.trim()){e.preventDefault();u.value=l} // input type=url membuang baris baru, jadi ambil link sebelum disisipkan
+  setTimeout(()=>{u.oninput();load()},60)};
+u.onkeydown=e=>{if(e.key==='Enter')load()};
+$('#go').onclick=load;
+$('#p').onclick=async()=>{try{const x=await navigator.clipboard.readText();u.value=pickUrl(x)||x.trim();u.oninput();load()}catch{say(t('clip'))}};
+theme(document.documentElement.dataset.theme);apply();put(emptyHTML());requestAnimationFrame(()=>requestAnimationFrame(()=>document.documentElement.classList.add('ready')));
+if(/FBAN|FBAV|Instagram|TikTok|musical_ly|BytedanceWebview|Line\//i.test(navigator.userAgent))setTimeout(()=>say('If nothing saves, open this page in Safari or Chrome.',8000),1500);
+// ---------- Pengingat: jangan sampai pergi saat proses berjalan atau file siap tapi belum tersimpan ----------
+let pend=null,rdy=null,leaving=0;const baseTitle=document.title;
+const guard=()=>leaving?'':out.dataset.busy?'busy':pend?'ready':'';
+function showReady(){
+  if(!rdy){rdy=document.createElement('div');rdy.className='rdy';rdy.setAttribute('role','status');
+    rdy.innerHTML='<div><b>Your file is ready</b><small></small></div><button class="btn" type="button">'+(appMode?'Save':'Download')+'</button>';
+    rdy.querySelector('button').onclick=save;document.body.append(rdy)}
+  rdy.querySelector('small').textContent=pend.name+(pend.size?' · '+MB(pend.size,true):'');
+  document.body.classList.add('rdy-on');void rdy.offsetWidth;rdy.classList.add('on')}
+function hideReady(){document.body.classList.remove('rdy-on');if(rdy){const r=rdy;rdy=null;r.classList.remove('on');setTimeout(()=>r.remove(),600)}}
+const unok=p=>{if(p&&p.card)p.card.classList.remove('ok')};
+function hold(p){if(pend&&pend.card!==p.card)unok(pend);pend=p;syncBack();clearTimeout(hold.t);hold.t=setTimeout(()=>{unok(pend);pend=null;syncBack();hideReady();document.title=baseTitle},9*60e3);document.title='\u2713 File ready \u00b7 '+baseTitle;showReady()}
+function save(){if(!pend)return;const p=pend;pend=null;syncBack();clearTimeout(hold.t);hideReady();document.title=baseTitle;
+  Promise.resolve(p.go()).then(ok=>{if(ok===false)hold(p);else{unok(p);stp(3);say(appMode?'Done':t('started')+MB(p.size,true))}})}
+// bar progres tak pasti: mulai ulang animasinya (kalau sempat macet), kecuali sudah berupa progres nyata
+function restartBar(){const i=document.querySelector('.pgb i');if(i&&i.style.animation!=='none'){i.style.animation='none';void i.offsetWidth;i.style.animation=''}}
+function ask(kind,go){
+  const rd=kind==='ready',d=document.createElement('div');d.className='dlg';d.setAttribute('role','alertdialog');d.setAttribute('aria-modal','true');
+  d.innerHTML=`<div class="box"><h2>${rd?"Your file isn't saved yet":'Leave while preparing?'}</h2><p>${rd?"It's ready but hasn't been downloaded. If you leave now, it will be lost.":"Your file is still being prepared. If you leave now, you'll need to start again."}</p><div class="eb"><button class="btn" type="button" data-a="stay">${rd?'Download':'Stay on page'}</button><button class="ghost" type="button" data-a="leave">${rd?'Leave anyway':'Leave'}</button></div></div>`;
+  if(out.dataset.busy)d.classList.add('flat');   // tanpa blur latar saat proses jalan: iOS bisa membekukan animasi di bawah lapisan blur
+  document.body.append(d);void d.offsetWidth;d.classList.add('on');
+  const close=()=>{d.classList.remove('on');setTimeout(()=>d.remove(),400);restartBar();setTimeout(restartBar,120);setTimeout(restartBar,480);document.removeEventListener('keydown',esc)},esc=e=>{if(e.key==='Escape')close()};
+  document.addEventListener('keydown',esc);
+  d.onclick=e=>{const a=e.target.closest('button');if(a){if(a.dataset.a==='leave'){leaving=1;close();go()}else{close();if(rd)save()}}else if(e.target===d)close()};
+  d.querySelector('.btn').focus()}
+// pindah halaman lewat tautan di web ini: dialog sendiri (peramban di HP sering mengabaikan dialog bawaan)
+document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href]');
+  if(!a||a.hasAttribute('download')||a.target==='_blank'||e.defaultPrevented||e.metaKey||e.ctrlKey)return;
+  let n;try{n=new URL(a.href,location.href)}catch(x){return}
+  if(n.origin!==location.origin||(n.pathname===location.pathname&&n.search===location.search))return;
+  const k=guard();if(!k)return;e.preventDefault();e.stopImmediatePropagation();ask(k,()=>{location.href=a.href})},true);
+// refresh, tutup tab, atau mengetik alamat lain
+addEventListener('beforeunload',e=>{if(guard()){e.preventDefault();e.returnValue=''}});
+// kembali ke tab ini: ingatkan apa yang masih menunggu
+document.addEventListener('visibilitychange',()=>{if(document.hidden)return;restoreUrl();restartBar();
+  if(pend){showReady();rdy.classList.remove('nudge');void rdy.offsetWidth;rdy.classList.add('nudge')}
+  else if(out.dataset.busy)say('Still preparing. Keep this page open.',3500)});
+// geser-kembali / tombol back: tambah satu entri riwayat selama ada yang harus dijaga, lalu tanyakan sebelum benar-benar pergi
+var keepUrl;let gEntry=false,ignorePop=0;
+function syncBack(){
+  if(guard()){if(!gEntry){history.pushState({gk:1},'');gEntry=true}}
+  else if(gEntry){gEntry=false;if(history.state&&history.state.gk){ignorePop++;history.back()}}}
+addEventListener('popstate',()=>{
+  if(ignorePop){ignorePop--;return}
+  if(!gEntry)return;
+  const k=guard();if(!k){gEntry=false;return}
+  ask(k,()=>{gEntry=false;history.go(-2)});   // dialog dulu, baru tambah entri riwayat (pushState di tengah animasi geser-kembali iOS lambat)
+  requestAnimationFrame(()=>history.pushState({gk:1},''))});
+// kembali ke halaman ini dari riwayat: Safari mengosongkan kolom link (autocomplete=off), kembalikan isinya
+addEventListener('pageshow',e=>{if(!e.persisted)return;leaving=0;gEntry=!!(history.state&&history.state.gk);
+  restoreUrl();[60,250,700].forEach(ms=>setTimeout(restoreUrl,ms))}); // Safari bisa mengosongkan kolom sesudah pageshow, jadi coba beberapa kali
+// isi kolom link hanya dikembalikan kalau kosong DAN hasil lama masih tampil, supaya tidak menimpa ketikan baru
+// pergi dari halaman saat Get video masih mencari: batalkan, tampilan kembali kosong (link tetap di kolom)
+function cancelLookup(){if(!looking)return;looking=0;try{ac.abort()}catch{}cur=lastErr=null;done();put(emptyHTML())}
+addEventListener('pagehide',cancelLookup);
+function restoreUrl(){const k=keepUrl;if(k&&!u.value){u.value=k;u.oninput()}}
+const q=new URLSearchParams(location.search),pre=q.get('url')||q.get('text');
+if(pre){u.value=pickUrl(pre)||pre.trim();u.oninput();load()}
+else{try{const nv=performance.getEntriesByType('navigation')[0],s=sessionStorage.getItem('gk:u');if(nv&&nv.type==='back_forward'&&s){u.value=s;u.oninput();load()}}catch{}} // halaman dimuat ulang saat kembali: isi lagi link terakhir dan cari ulang
+</script>
+</body>
+</html>
