@@ -17,8 +17,8 @@
   --shc:rgba(20,20,60,.11);
   --rim1:rgba(255,255,255,1);
   --rim2:rgba(0,0,0,.06);
-  --s1:rgba(255,255,255,.9);--s2:rgba(255,255,255,.35);--s3:rgba(255,255,255,.6);
-  --sheen:linear-gradient(160deg,var(--s1),var(--s2) 55%,var(--s3));
+  --gl1:rgba(255,255,255,.9);--gl2:rgba(255,255,255,.35);--gl3:rgba(255,255,255,.6);
+  --sheen:linear-gradient(160deg,var(--gl1),var(--gl2) 55%,var(--gl3));
   --blur:blur(30px) saturate(180%);
 }
 [data-theme=dark]{
@@ -34,7 +34,7 @@
   --shc:rgba(0,0,0,.6);
   --rim1:rgba(255,255,255,.4);
   --rim2:rgba(255,255,255,.06);
-  --s1:rgba(255,255,255,.14);--s2:rgba(255,255,255,.04);--s3:rgba(255,255,255,.08);
+  --gl1:rgba(255,255,255,.14);--gl2:rgba(255,255,255,.04);--gl3:rgba(255,255,255,.08);
 }
 html,body{background:var(--bg)}
 body::before,body::after{content:none}
@@ -160,8 +160,8 @@ html.vt-theme::view-transition-old(root),html.vt-theme::view-transition-new(root
 /* Fallback tanpa View Transitions: semua token warna dianimasikan bersama, komponen tidak punya transisi warna sendiri */
 @property --btn{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.8)}
 @property --inp{syntax:"<color>";inherits:true;initial-value:rgba(120,120,135,.1)}
-@property --s1{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.9)}
-@property --s2{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.35)}
-@property --s3{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.6)}
-html.ready{transition:--bg var(--tt),--t var(--tt),--t2 var(--tt),--g var(--tt),--gb var(--tt),--hl var(--tt),--shc var(--tt),--ac var(--tt),--ac2 var(--tt),--act var(--tt),--rim1 var(--tt),--rim2 var(--tt),--card var(--tt),--fill var(--tt),--btn var(--tt),--inp var(--tt),--s1 var(--tt),--s2 var(--tt),--s3 var(--tt)}
+@property --gl1{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.9)}
+@property --gl2{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.35)}
+@property --gl3{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.6)}
+html.ready{transition:--bg var(--tt),--t var(--tt),--t2 var(--tt),--g var(--tt),--gb var(--tt),--hl var(--tt),--shc var(--tt),--ac var(--tt),--ac2 var(--tt),--act var(--tt),--rim1 var(--tt),--rim2 var(--tt),--card var(--tt),--fill var(--tt),--btn var(--tt),--inp var(--tt),--gl1 var(--tt),--gl2 var(--tt),--gl3 var(--tt)}
 html.theming:not(.vt-theme) :is(button:not(.sw),a,input,.glass,.fmt,.rc,.card,.seg,.seg *,.ico,.drawer,.qrc,.opt,.form,.drop,.job,.pv,.err,.how,.doc,.qrbox,.uploadBox){transition-property:none!important}
