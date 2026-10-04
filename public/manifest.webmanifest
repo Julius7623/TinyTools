@@ -1,6 +1,6 @@
 {
-  "name": "TinyTools",
-  "short_name": "TinyTools",
+  "name": "MyTinyTools",
+  "short_name": "MyTinyTools",
   "description": "Simple free tools: video downloader, QR codes, and PDF to Word",
   "start_url": "/",
   "scope": "/",

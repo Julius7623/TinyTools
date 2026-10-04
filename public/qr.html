@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="Create QR codes for links, text, WiFi, and WhatsApp. Free, private, no sign-up.">
-<title>QR Maker - Free QR code generator</title>
+<meta name="description" content="Create QR codes for links, text, Wi-Fi, and WhatsApp. Free, private, no sign-up.">
+<title>QR Maker · Free QR code generator</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23111'/%3E%3Cpath d='M16 7v13M10.500 15l5.500 5.500 5.500-5.500M9 25h14' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="canonical" href="__ORIGIN__/qr">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="TinyTools">
-<meta property="og:type" content="website"><meta property="og:site_name" content="TinyTools"><meta property="og:title" content="QR Maker - Free QR code generator"><meta property="og:description" content="Create QR codes for links, text, WiFi, and WhatsApp. Free, private, no sign-up."><meta property="og:url" content="__ORIGIN__/qr"><meta property="og:image" content="__ORIGIN__/og.png"><meta name="twitter:card" content="summary_large_image">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="MyTinyTools">
+<meta property="og:type" content="website"><meta property="og:site_name" content="MyTinyTools"><meta property="og:title" content="QR Maker · Free QR code generator"><meta property="og:description" content="Create QR codes for links, text, Wi-Fi, and WhatsApp. Free, private, no sign-up."><meta property="og:url" content="__ORIGIN__/qr"><meta property="og:image" content="__ORIGIN__/og.png"><meta name="twitter:card" content="summary_large_image">
 <script>
 try{var s=localStorage.getItem('theme')}catch(e){}
 document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')
 </script>
 <link rel="stylesheet" href="/base.css?v=9">
 <link rel="stylesheet" href="/ui.css?v=26">
-<script src="/shell.js?v=34" defer></script>
+<script src="/shell.js?v=35" defer></script>
 <style>
 /* Slider segmented control (same feel as the dark mode switch) */
 .seg{--n:3;position:relative;display:flex;padding:4px;border-radius:999px;background:rgba(127,127,127,.16);margin-bottom:16px;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:pointer;box-shadow:inset 0 1px 3px rgba(0,0,0,.14)}
@@ -96,7 +96,7 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
 .qrc svg{width:100%;height:100%;display:block}
 .qrh{padding:24px;text-align:center;font-size:15px;max-width:240px}
 .sub2{width:100%;margin-top:12px;font-size:13px;color:var(--t2);text-align:center;max-width:340px;min-height:2.8em}
-.qrbox .eb{margin-top:16px;width:100%}.qrbox .eb>*{flex:1}
+.qrbox .eb{margin-top:16px;width:100%}.fmtnote{margin-top:10px;font-size:13px;color:var(--t2);text-align:center}.qrbox .eb>*{flex:1}
 .opt{display:flex;flex-direction:column;align-items:center;width:100%}
 .opt .ol{display:block;font-size:13px;font-weight:600;color:var(--t2);padding:0 4px;align-self:flex-start}
 .opt.glass .ol{display:block}
@@ -158,8 +158,8 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
     <button class="more quiet" id="advb" type="button" aria-expanded="false" aria-controls="advp"><span>Options</span><i></i></button>
     <div class="mx" id="advp" inert><div>
     <div class="opt" id="opt">
-    <span class="ol">Strength</span>
-    <div class="seg sm" id="ec" role="radiogroup" aria-label="QR code strength">
+    <span class="ol">Durability</span>
+    <div class="seg sm" id="ec" role="radiogroup" aria-label="QR code durability">
       <span class="thumb"></span>
       <button type="button" role="radio" data-l="1">Low</button>
       <button type="button" role="radio" data-l="0">Medium</button>
@@ -170,6 +170,7 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
     </div></div>
     </div>
     <div class="eb"><button class="btn" id="dp" disabled>Save PNG</button><button class="ghost" id="ds" disabled>Save SVG</button></div>
+    <p class="fmtnote">PNG for sharing · SVG for printing</p>
   </div>
   </div>
   <p class="foot">Made on your device. Nothing is stored.<br><a class="lk" href="/how">How to use</a> &middot; <a class="lk" href="/legal">Privacy &amp; Terms</a></p>
@@ -455,10 +456,10 @@ let cc=CC.find(c=>c.iso===store('qrcc'))||CC.find(c=>c.iso==='ID');
 
 /* ---------- QR state ---------- */
 const MODES=['text','wifi','wa'],LV=[1,0,2];
-const NOTE=['Simplest code.','Good for most uses.','Scans even when damaged, but looks denser.'];
+const NOTE=['Cleanest look. Best on screens.','Good for most uses.','Still scans if scuffed or partly covered, but looks denser.'];
 const F={
  text:[['v','','text','Paste a link or type text']],
- wifi:[['s','Network name','text','My WiFi'],['p','Password','text','']],
+ wifi:[['s','Network name','text','My Wi-Fi'],['p','Password','text','']],
  wa:[['m','Message (optional)','text','Hello!']]};
 let mode='text',lvl=0,mods=null,vals={};
 const ESC=s=>s.replace(/([\\;,:"])/g,'\\$1');
@@ -483,7 +484,7 @@ function render(){
  const text=build();let q=null;
  if(text)q=enc(text,lvl);
  $('#dp').disabled=$('#ds').disabled=!q;
- if(!q){mods=null;box.innerHTML=text?'<p class="qrh">That is too long for a QR code. Try something shorter.</p>':'<p class="qrh">Your QR code will appear here.</p>';return}
+ if(!q){mods=null;box.innerHTML=text?'<p class="qrh">That\'s too long for a QR code. Try something shorter.</p>':'<p class="qrh">Your QR code will appear here.</p>';return}
  const n=q.getModuleCount();mods=[];let d='';
  for(let r=0;r<n;r++){let run=0;mods.push([]);for(let c=0;c<=n;c++){const on=c<n&&q.isDark(r,c);if(c<n)mods[r].push(on);if(on)run++;else if(run){d+=`M${c-run+4} ${r+4}h${run}v1h-${run}z`;run=0}}}
  const s=n+8;window._svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${s} ${s}" shape-rendering="crispEdges"><rect width="${s}" height="${s}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
@@ -494,7 +495,7 @@ const field=([k,l,t,p])=>`<label class="fld">${l?`<span>${l}</span>`:''}<input d
 const chev='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>';
 function ccBtn(){const b=$('#cc');if(b)b.innerHTML=`<i class="iso">${cc.iso}</i><b>${dial(cc)}</b>${chev}`}
 function hint(){hint0()}
-function hint0(){const h=$('#wh');if(!h)return;const n=waNum(),t=n?'Opens a chat with +'+n:'Without the country code.',s=!!n;if(h._s===s){const sp=h.querySelector('span:not([data-g])');if(sp)sp.textContent=t;else h.textContent=t;h._bt=t}else{const first=h._s===undefined;h._s=s;GlassKit.blend(h,t,!first)}}
+function hint0(){const h=$('#wh');if(!h)return;const n=waNum(),t=n?'Opens a chat with +'+n:'Enter the number without the country code.',s=!!n;if(h._s===s){const sp=h.querySelector('span:not([data-g])');if(sp)sp.textContent=t;else h.textContent=t;h._bt=t}else{const first=h._s===undefined;h._s=s;GlassKit.blend(h,t,!first)}}
 function fields(){const f=$('#form');window.GlassKit?GlassKit.morph(f,fields0):fields0()}
 function fields0(){
  $('#form').innerHTML=mode==='wa'

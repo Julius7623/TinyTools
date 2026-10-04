@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: tinytools
+    name: mytinytools
     runtime: docker
     plan: free
     healthCheckPath: /healthz

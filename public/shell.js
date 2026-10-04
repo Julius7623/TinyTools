@@ -13,7 +13,7 @@ help:'<circle cx="12" cy="12" r="9"/><path d="M9.600 9.500a2.500 2.500 0 1 1 3.5
 const TOOLS=[
 {n:'Video Downloader',p:'/grab',d:'Save a video from a link',i:'dl',live:1},
 {n:'QR Maker',p:'/qr',d:'Make a QR code',i:'qr',live:1},
-{n:'PDF to Word',p:'/pdf2word',d:'Turn a PDF into Word',i:'word',live:1}];
+{n:'PDF to Word',p:'/pdf2word',d:'Turn a PDF into a Word file',i:'word',live:1}];
 const ico=k=>`<span class="ico"><svg viewBox="0 0 24 24">${P[k]}</svg></span>`;
 window.GlassKit={TOOLS,ico,cards(el){el.innerHTML=TOOLS.map((t,i)=>{const tag=t.live?'a':'div',h=t.live?` href="${t.p}"`:'';
  return `<${tag} class="glass card ${t.live?'live':'soon'}"${h} style="--n:${i}">${ico(t.i)}<span class="ct"><b>${t.n}</b><p>${t.d}</p></span><i class="chev" aria-hidden="true"></i></${tag}>`}).join('')}};
@@ -47,7 +47,7 @@ function mount(){
  const mb=$('#mb');if(!mb)return;
  const sc=D.createElement('div'),dr=D.createElement('nav');
  sc.className='scrim';sc.style.display='none';dr.className='drawer';dr.id='dr';dr.setAttribute('aria-label','Tools');dr.setAttribute('role','dialog');dr.setAttribute('aria-modal','true');dr.inert=true;
- dr.innerHTML='<div class="dh"><b>TinyTools</b><button class="x" aria-label="Close menu"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
+ dr.innerHTML='<div class="dh"><b>MyTinyTools</b><button class="x" aria-label="Close menu"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
   +[{n:'Home',p:'/',i:'home',home:1},...TOOLS,{n:'How to use',p:'/how',i:'help',home:1}].map(t=>item(t,t.p===here)).join('')+'<p class="dc">Made by <b translate="no">Joel G. Thompson</b> &middot; <a class="lk" href="/legal">Privacy &amp; Terms</a></p>';
  D.body.append(sc,dr);
  const mq=matchMedia('(min-width:1280px)'),side=()=>{if(mq.matches)D.body.classList.remove('menu');dr.inert=mq.matches?false:!D.body.classList.contains('menu')};mq.addEventListener('change',side);side();

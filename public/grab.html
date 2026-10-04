@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <meta name="description" content="Download public videos from Instagram, TikTok, Facebook, and X (formerly Twitter) when the link is supported. Free, no ads, no sign-up.">
-<title>Video Downloader - Save videos from a link</title>
+<title>Video Downloader · Save videos from a link</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23111'/%3E%3Cpath d='M16 7v13M10.500 15l5.500 5.500 5.500-5.500M9 25h14' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <script>
 try{var s=localStorage.getItem('theme')}catch(e){}
@@ -14,11 +14,11 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
 <link rel="canonical" href="__ORIGIN__/grab">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="TinyTools">
-<meta property="og:type" content="website"><meta property="og:site_name" content="TinyTools"><meta property="og:title" content="Video Downloader - Save videos from a link"><meta property="og:description" content="Download public videos from Instagram, TikTok, Facebook, and X (formerly Twitter) when the link is supported. Free, no ads, no sign-up."><meta property="og:url" content="__ORIGIN__/grab"><meta property="og:image" content="__ORIGIN__/og.png"><meta name="twitter:card" content="summary_large_image">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="MyTinyTools">
+<meta property="og:type" content="website"><meta property="og:site_name" content="MyTinyTools"><meta property="og:title" content="Video Downloader · Save videos from a link"><meta property="og:description" content="Download public videos from Instagram, TikTok, Facebook, and X (formerly Twitter) when the link is supported. Free, no ads, no sign-up."><meta property="og:url" content="__ORIGIN__/grab"><meta property="og:image" content="__ORIGIN__/og.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="/base.css?v=9">
 <link rel="stylesheet" href="/ui.css?v=26">
-<script src="/shell.js?v=34" defer></script>
+<script src="/shell.js?v=35" defer></script>
 
 </head>
 <body data-own-theme>
@@ -33,7 +33,7 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
   <h1 data-i="h1"></h1>
   <p class="sub" data-i="sub"></p>
   <div class="glass bar">
-    <input id="u" type="url" enterkeyhint="go" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="url" aria-label="URL" autocomplete="off">
+    <input id="u" type="url" enterkeyhint="go" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="url" aria-label="Video link" autocomplete="off">
     <button class="clr hide" id="x" data-fast type="button" aria-label="Clear link"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <span class="pill hide" id="bd" role="img"></span>
     <button class="ghost" id="p" data-i="paste"></button>
@@ -44,7 +44,7 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
 </main>
 <div class="glass" id="t" role="status" aria-live="polite"></div>
 <script>
-const L={en:{doc:'Video Downloader - Save videos from a link',h1:'Save a video',sub:'Paste a link from Instagram, TikTok, Facebook, or X.',ph:'Paste a video link',paste:'Paste',go:'Get video',empty:'',foot:'For content you own or may use. Nothing is stored.',bv:'Video · Best quality',sv:'Video · Smaller file',ba:'Audio only · Best quality',orig:'Video',proc:'Processing…',fin:'Finishing…',rec:'Choose a format',rech:'',more:'More formats',less:'Fewer formats',av:'Video with audio',avh:'',vo:'Video with audio',voh:'',ao:'Audio only',aoh:'',upto:'Up to ',aud:'audio',best:'Best quality',compat:'Most compatible',small:'Smaller file',unk:'Size unknown',prep:'Preparing…',started:'Download started · ',clip:"Can't read the clipboard. Paste the link yourself.",look:'Finding your video…',wait:'This takes a few seconds.',wait2:'One moment. Still preparing.',slow:'Still working. The server may be waking up.'}};
+const L={en:{doc:'Video Downloader · Save videos from a link',h1:'Save a video',sub:'Paste a public video link from Instagram, TikTok, Facebook, or X.',ph:'Paste a video link',paste:'Paste',go:'Get video',empty:'',foot:'Only for content you own or have permission to use. Nothing is stored.',bv:'Video · Best quality',sv:'Video · Smaller file',ba:'Audio only · Best quality',orig:'Video',proc:'Processing…',fin:'Finishing…',rec:'Choose a format',rech:'',more:'More formats',less:'Fewer formats',av:'Video with audio',avh:'',vo:'Video with audio',voh:'',ao:'Audio only',aoh:'',upto:'Up to ',aud:'audio',best:'Best quality',compat:'Works everywhere',small:'Smaller file',unk:'Size unknown',prep:'Preparing…',started:'Download started · ',clip:"Couldn't read the clipboard. Press and hold the box to paste.",look:'Finding your video…',wait:'This takes a few seconds.',wait2:'One moment. Still preparing.',slow:'Still working. The first request can take a little longer.'}};
 const $=s=>document.querySelector(s),u=$('#u'),out=$('#out'),tt=$('#t');
 const store=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}};
 // Aplikasi layar utama iPhone/iPad: tidak ada tombol kembali, jadi file dibuka lewat lembar Bagikan (Save to Files / Save Video), bukan dinavigasi ke pratinjau
@@ -102,21 +102,21 @@ const stp=()=>{};
 const M=(e,f,o)=>window.GlassKit?GlassKit.morph(e,f,o):f();
 const put=h=>{stp(/glass pv"/.test(h)?2:1);out.classList.remove('anim');M(out,()=>{out.innerHTML=h},{fade:false});void out.offsetWidth;out.classList.add('anim');clearTimeout(put.t);put.t=setTimeout(()=>out.classList.remove('anim'),1300)}; // animasi masuk cukup sekali; lepas kelasnya supaya tidak terulang saat tombol ditekan
 const ER={
-BOT:{title:'This site is blocking our server',why:'Some platforms block requests that come from data centers, even for public videos.',tip:'Try again later, or try a video from another platform.',retry:1},
+BOT:{title:'This platform blocked the request',why:'Some platforms block requests that come from data centers, even for public videos.',tip:'Try again later, or try a video from another platform.',retry:1},
 BAD_URL:{title:"That doesn't look like a valid link",why:'The link may be cut off or mistyped.',tip:'Copy the full link from the app or browser, then paste it again.'},
 ADDR:{title:"This address can't be used",why:'Links to private or local addresses are blocked for safety.',tip:'Use a public video link instead.'},
 PRIVATE:{title:'This video is private',why:'It needs a login, or only certain people can watch it.',tip:'Try a public video, or one you can open without signing in.'},
-UNSUPPORTED:{title:"This link isn't supported yet",why:"We couldn't find a video on this page.",tip:'Make sure the link opens a video, not a profile or search page.'},
+UNSUPPORTED:{title:'No video found at this link',why:"We couldn't find a video on this page.",tip:'Make sure the link opens a video, not a profile or search page.'},
 UNAVAILABLE:{title:"This video isn't available",why:'It may have been deleted, or it is blocked in some regions.',tip:'Check that it still plays in your browser.'},
 RATE:{title:'Too many requests',why:'The platform or server needs a short break.',tip:'Wait a minute, then try again.',retry:1},
 TOO_BIG:{title:'This file is too large',why:"This server can't prepare files that big.",tip:'Pick a lower quality, or choose audio only.'},
-BAD_FORMAT:{title:"That format isn't available",why:'The list may be out of date.',tip:'Look up the link again and choose another format.'},
+BAD_FORMAT:{title:"That format isn't available",why:'The list may be out of date.',tip:'Tap Get video again and choose another format.'},
 BUSY:{title:'The server is busy',why:'Other downloads are running right now.',tip:'Try again in a few seconds.',retry:1},
 EXPIRED:{title:'This file has expired',why:'Prepared files are removed after a few minutes.',tip:'Tap the format again to prepare a new one.'},
-LOGIN:{title:'This platform wants a login',why:'Some posts (often on Instagram and Facebook) only open for signed-in accounts, or the platform is limiting our server.',tip:'Try a public post, or try again later.',retry:1},
-BLOCKED:{title:'The platform is blocking our server',why:'Some platforms block requests from data centers, even for public videos.',tip:'Try again later, or try a link from another platform.',retry:1},
-EXTRACT:{title:"Couldn't read this video",why:'The platform may have changed, or it blocked our request.',tip:'Try again in a few minutes. If it keeps failing, the platform is probably blocking this server.',retry:1},
-FORMAT:{title:"That format isn't available",why:'The platform changed its list since you looked it up.',tip:'Look up the link again and choose another format.',retry:1},
+LOGIN:{title:'This post needs a login',why:'Some posts (often on Instagram and Facebook) only open for signed-in accounts, or the platform is limiting our server.',tip:'Try a public post, or try again later.',retry:1},
+BLOCKED:{title:'This platform blocked the request',why:'Some platforms block requests from data centers, even for public videos.',tip:'Try again later, or try a link from another platform.',retry:1},
+EXTRACT:{title:"Couldn't read this video",why:'The platform may have changed, or it blocked our request.',tip:'Try again in a few minutes. If it keeps failing, try a different link.',retry:1},
+FORMAT:{title:"That format isn't available",why:'The platform changed its list since you looked it up.',tip:'Tap Get video again and choose another format.',retry:1},
 TIMEOUT:{title:'This took too long',why:'The video may be very large, or the server is busy.',tip:'Try a lower quality, or try again.',retry:1},
 FAILED:{title:"Couldn't process this video",why:'Something went wrong while reading it.',tip:'Try again, or pick a different format.',retry:1}};
 const NET={title:'No connection',why:"We couldn't reach the server.",tip:'Check your internet connection, then try again.',retry:1};
