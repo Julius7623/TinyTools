@@ -15,7 +15,7 @@ const TOOLS=[
 {n:'QR Maker',p:'/qr',d:'Make a QR code',i:'qr',live:1},
 {n:'PDF to Word',p:'/pdf2word',d:'Turn a PDF into a Word file',i:'word',live:1}];
 const ico=k=>`<span class="ico"><svg viewBox="0 0 24 24">${P[k]}</svg></span>`;
-window.GlassKit={TOOLS,ico,cards(el){el.innerHTML=TOOLS.map((t,i)=>{const tag=t.live?'a':'div',h=t.live?` href="${t.p}"`:'';
+window.GlassKit={noVT:/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),TOOLS,ico,cards(el){el.innerHTML=TOOLS.map((t,i)=>{const tag=t.live?'a':'div',h=t.live?` href="${t.p}"`:'';
  return `<${tag} class="glass card ${t.live?'live':'soon'}"${h} style="--n:${i}">${ico(t.i)}<span class="ct"><b>${t.n}</b><p>${t.d}</p></span><i class="chev" aria-hidden="true"></i></${tag}>`}).join('')}};
 // Warna bar Safari: dua strip tipis opak di tepi atas/bawah (Safari iOS 26 mengambil warna bar dari elemen fixed opak teratas di tepi).
 // Warnanya mengikuti ALPHA scrim frame demi frame, jadi bar dan halaman meredup/terang barengan dengan kurva yang sama.
@@ -31,7 +31,7 @@ const tcolor=()=>{const B=D.body,s=D.querySelector('.scrim'),dim=B.classList.con
  cancelAnimationFrame(raf);tt.forEach(clearTimeout);
  const R0=D.documentElement,th=R0.dataset.theme,BGc=x=>x==='dark'?[0,0,0]:[242,242,247];
  if(th!==tcolor.th){const from=BGc(tcolor.th||th),to=BGc(th),first=!tcolor.th;tcolor.th=th;
-  if(!first&&!dim&&!matchMedia('(prefers-reduced-motion:reduce)').matches){const t1=performance.now(),D2=500;
+  if(!first&&!dim&&!matchMedia('(prefers-reduced-motion:reduce)').matches){const t1=performance.now(),D2=GlassKit.noVT?550:500;
    const tk=()=>{const p=Math.min(1,(performance.now()-t1)/D2),e=ease(p);paint(from.map((v,i)=>v+(to[i]-v)*e),0,true);if(p<1)raf=requestAnimationFrame(tk);else{paint(to,0,true);tt=[450,900].map(ms=>setTimeout(()=>paint(baseRGB(),0,true),ms))}};tk();return}}
  const fin=()=>{paint(baseRGB(),tg,true);tt=[450,900].map(ms=>setTimeout(()=>paint(baseRGB(),tg,true),ms))};   // akhir: strip dibuat ulang agar Safari mengambil ulang warnanya
  if(!s||s.style.display==='none'||matchMedia('(prefers-reduced-motion:reduce)').matches){fin();return}
@@ -65,7 +65,7 @@ function themeInit(){
  const dark=()=>R.dataset.theme==='dark',st=v=>{try{localStorage.setItem('theme',v)}catch(e){}};
  const sync=()=>{tsw.classList.toggle('on',dark());tsw.setAttribute('aria-checked',dark())};
  const apply=v=>{R.dataset.theme=v?'dark':'light';st(R.dataset.theme);sync()};
- const set=v=>{if(!D.startViewTransition||!R.classList.contains('ready')||matchMedia('(prefers-reduced-motion:reduce)').matches){apply(v);return}
+ const set=v=>{if(GlassKit.noVT||!D.startViewTransition||!R.classList.contains('ready')||matchMedia('(prefers-reduced-motion:reduce)').matches){apply(v);return}
   R.classList.add('vt-theme');let vt;try{vt=D.startViewTransition(()=>apply(v))}catch(e){apply(v);R.classList.remove('vt-theme');return}
   const done=()=>R.classList.remove('vt-theme');vt.finished.then(done,done)};   // crossfade seluruh halaman: halus di Safari/Chrome terbaru
  let id=null,x0=0,p0=0,trv=0,mv=false;
@@ -152,7 +152,7 @@ new MutationObserver(()=>{const k=document.querySelector('.sw .kn'),H=document.d
 (()=>{ // warna bilah browser mengikuti tema; kelas "theming" menandai saat pergantian berlangsung
 const R=document.documentElement,D=document;let t;
 const mk=n=>{let m=D.querySelector('meta[name='+n+']');if(!m){m=D.createElement('meta');m.name=n;D.head.append(m)}return m};
-const sync=()=>{const d=R.dataset.theme==='dark';mk('theme-color').content=d?'#000':'#f2f2f7';mk('color-scheme').content=d?'dark':'light'};
+const sync=()=>{const d=R.dataset.theme==='dark';if(!D.querySelector('meta[name=theme-color]'))mk('theme-color').content=d?'#000':'#f2f2f7';mk('color-scheme').content=d?'dark':'light'};
 new MutationObserver(()=>{R.classList.add('theming');clearTimeout(t);t=setTimeout(()=>R.classList.remove('theming'),650);sync()}).observe(R,{attributes:true,attributeFilter:['data-theme']});sync();
 })();
 (()=>{ // Tombol "Clear" otomatis di setiap kolom ketik (kolom link Video Downloader punya tombolnya sendiri)

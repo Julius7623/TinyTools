@@ -18,9 +18,9 @@ document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dar
 <meta property="og:type" content="website"><meta property="og:site_name" content="MyTinyTools"><meta property="og:title" content="Video Downloader · Save videos from a link"><meta property="og:description" content="Download public videos from Instagram, TikTok, Facebook, and X (formerly Twitter) when the link is supported. Free, no ads, no sign-up."><meta property="og:url" content="__ORIGIN__/grab"><meta property="og:image" content="__ORIGIN__/og.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="/base.css?v=9">
 <link rel="stylesheet" href="/ui.css?v=26">
-<script src="/shell.js?v=37" defer></script>
+<script src="/shell.js?v=38" defer></script>
 
-<link rel="stylesheet" href="/glass.css?v=6">
+<link rel="stylesheet" href="/glass.css?v=7">
 </head>
 <body data-own-theme>
 <header>
@@ -82,7 +82,7 @@ function apply(){
 function theme(v){
   const R=document.documentElement,go=()=>{R.dataset.theme=v;store('theme',v);sync()};
   // Pergantian tema = crossfade seluruh halaman 0,5 dtk (sama seperti halaman lain); saat halaman baru dibuka langsung tanpa animasi
-  if(!document.startViewTransition||!R.classList.contains('ready')||matchMedia('(prefers-reduced-motion:reduce)').matches)return go();
+  if(GlassKit.noVT||!document.startViewTransition||!R.classList.contains('ready')||matchMedia('(prefers-reduced-motion:reduce)').matches)return go();
   R.classList.add('vt-theme');let vt;try{vt=document.startViewTransition(go)}catch(e){go();R.classList.remove('vt-theme');return}
   const done=()=>R.classList.remove('vt-theme');vt.finished.then(done,done);
 }
