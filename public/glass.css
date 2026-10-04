@@ -166,5 +166,6 @@ html.vt-theme::view-transition-old(root),html.vt-theme::view-transition-new(root
 html.ready{transition:--bg var(--tt),--t var(--tt),--t2 var(--tt),--g var(--tt),--gb var(--tt),--hl var(--tt),--shc var(--tt),--ac var(--tt),--ac2 var(--tt),--act var(--tt),--rim1 var(--tt),--rim2 var(--tt),--card var(--tt),--fill var(--tt),--btn var(--tt),--inp var(--tt),--gl1 var(--tt),--gl2 var(--tt),--gl3 var(--tt)}
 html.theming:not(.vt-theme) :is(button:not(.sw),a,input,.glass,.fmt,.rc,.card,.seg,.seg *,.ico,.drawer,.qrc,.opt,.form,.drop,.job,.pv,.err,.how,.doc,.qrbox,.uploadBox){transition-property:none!important}
 
-/* iOS tanpa View Transition: bayangan dan latar yang nilainya beda antar tema ikut memudar bersama token warna (0,55 dtk) */
-html.theming:not(.vt-theme) :is(.btn,.ghost,.mb,.more,.cl,.pill,.fld input,.cc,.ps,.seg,.ico,main .glass,main .fmt,main .rc,main .card,main .drop,main .job,main .opt,main .uploadBox,main .err,main .pv,main .sk,main .how,main .doc,main .qrbox,main .form){transition:box-shadow .55s cubic-bezier(.4,0,.2,1),background-color .55s cubic-bezier(.4,0,.2,1)!important}
+/* iOS tanpa View Transition: hanya bayangan berisi angka tetap (tidak lewat token warna) yang perlu memudar sendiri.
+   Latar dan bayangan berbasis token (.ico, kartu, tombol) sudah memudar lewat token, jadi tidak diberi transisi lagi (kalau diberi, jadi tertinggal). */
+html.theming:not(.vt-theme) :is(.btn,.fld input,.cc,.ps,.seg){transition:box-shadow .55s cubic-bezier(.4,0,.2,1)!important}
