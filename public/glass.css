@@ -134,3 +134,20 @@ main .drop{border:1.5px dashed rgba(127,127,127,.45)}
 .opt .sub2{text-align:left;padding:0;max-width:none}
 @media(max-width:959px){.opt{align-items:stretch}.opt .seg.sm{max-width:none;width:100%}}
 @media(min-width:960px){.opt .ol{align-self:center}}
+
+/* Kartu format yang dilipat/dibuka (.mx memakai overflow:hidden): bayangan luar ikut terpotong jadi sudut tampak kotak.
+   Di dalam .mx pakai garis tepi dalam saja, tanpa bayangan luar. */
+.mx .fmt,.mx .fmt:hover{box-shadow:inset 0 0 0 .5px var(--gb),inset 0 1.5px 0 var(--hl),inset 0 -1px 0 rgba(255,255,255,.1)}
+[data-theme=dark] .mx .fmt,[data-theme=dark] .mx .fmt:hover{box-shadow:inset 0 0 0 1px var(--gb),inset 0 1.5px 0 var(--hl)}
+.mx .fmt{background:var(--card)}
+
+/* Scrim lebih tipis supaya bar Safari atas/bawah tidak jadi abu pekat (nilai alpha harus sama dengan tg di shell.js) */
+body.menu .scrim,body.dim .scrim{background:rgba(0,0,0,.2)}
+[data-theme=dark] body.menu .scrim,[data-theme=dark] body.dim .scrim{background:rgba(0,0,0,.45)}
+.dlg.on{background:rgba(0,0,0,.25)}
+
+/* Pergantian tema: crossfade halus seluruh halaman (View Transitions). Transisi warna per-variabel dimatikan selama itu agar tidak dobel */
+html.vt-theme{transition:none!important}
+html.vt-theme header{view-transition-name:none}
+html.vt-theme::view-transition-group(root){animation-duration:.5s}
+html.vt-theme::view-transition-old(root),html.vt-theme::view-transition-new(root){animation-duration:.5s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
