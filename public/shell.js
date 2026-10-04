@@ -45,14 +45,14 @@ D.addEventListener('visibilitychange',()=>{if(!D.hidden)tcolor()});addEventListe
 const scr=()=>D.querySelector('.scrim'),showSc=()=>{const s=scr();if(s&&s.style.display==='none'){s.style.display='';void s.offsetWidth}},hideSc=()=>setTimeout(()=>{const s=scr(),B=D.body;if(s&&!B.classList.contains('menu')&&!B.classList.contains('dim'))s.style.display='none'},520);
 GlassKit.dim=v=>{if(v)showSc();D.body.classList.toggle('dim',!!v);tcolor();if(!v)hideSc()};
 const here=location.pathname.replace(/\/$/,'').replace(/\.html$/,'')||'/';
-const item=(t,cur)=>{const live=t.live||t.home,tag=live?'a':'div';
- return `<${tag} class="di${cur?' cur':''}${live?'':' soon'}"${live?` href="${t.p}"`:' aria-disabled="true"'}${cur?' aria-current="page"':''}>${ico(t.i)}<span class="tx"><b>${t.n}</b></span></${tag}>`};
+const item=(t,cur,pg)=>{const live=t.live||t.home,tag=live?'a':'div';
+ return `<${tag} class="di${pg?' pg':''}${cur?' cur':''}${live?'':' soon'}"${live?` href="${t.p}"`:' aria-disabled="true"'}${cur?' aria-current="page"':''}>${ico(t.i)}<span class="tx"><b>${t.n}</b></span></${tag}>`};
 function mount(){
  const mb=$('#mb');if(!mb)return;
  const sc=D.createElement('div'),dr=D.createElement('nav');
  sc.className='scrim';sc.style.display='none';dr.className='drawer';dr.id='dr';dr.setAttribute('aria-label','Tools');dr.setAttribute('role','dialog');dr.setAttribute('aria-modal','true');dr.inert=true;
  dr.innerHTML='<div class="dh"><b>MyTinyTools</b><button class="x" aria-label="Close menu"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
-  +[{n:'Home',p:'/',i:'home',home:1},...TOOLS,{n:'How to use',p:'/how',i:'help',home:1}].map(t=>item(t,t.p===here)).join('')+'<p class="dc">Made by <b translate="no">Joel G. Thompson</b> &middot; <a class="lk" href="/legal">Privacy &amp; Terms</a></p>';
+  +item({n:'Home',p:'/',i:'home',home:1},'/'===here,1)+'<p class="dl">Tools</p>'+TOOLS.map(t=>item(t,t.p===here)).join('')+'<hr class="dsep">'+item({n:'How to use',p:'/how',i:'help',home:1},'/how'===here,1)+'<p class="dc">Made by <b translate="no">Joel G. Thompson</b> &middot; <a class="lk" href="/legal">Privacy &amp; Terms</a></p>';
  D.body.append(sc,dr);
  const mq=matchMedia('(min-width:1280px)'),side=()=>{if(mq.matches)D.body.classList.remove('menu');dr.inert=mq.matches?false:!D.body.classList.contains('menu')};mq.addEventListener('change',side);side();
  const set=v=>{if(v)showSc();D.body.classList.toggle('menu',v);tcolor();if(!v)hideSc();mb.setAttribute('aria-expanded',v);dr.inert=!v;(v?dr.querySelector('.x'):mb).focus({preventScroll:true})};

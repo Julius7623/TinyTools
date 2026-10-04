@@ -177,3 +177,9 @@ html.theming:not(.vt-theme) :is(.btn,.fld input,.cc,.ps,.seg){transition:box-sha
 .sheet .pn{background:var(--sheetbg);-webkit-backdrop-filter:none;backdrop-filter:none}
 .sheet .pn .pt{background:var(--sheetbg)}
 .sheet .pn .lh{background:var(--sheetbg);-webkit-backdrop-filter:none;backdrop-filter:none;color:var(--t2)}
+
+/* Menu samping: Home dan How to use = halaman biasa (ikon abu, tanpa kotak putih), alat dikelompokkan di bawah label "Tools" */
+.drawer .dl{margin:14px 0 2px;padding:0 12px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)}
+.drawer .dsep{border:0;height:1px;margin:8px 12px;background:var(--gb);flex:none}
+.di.pg .ico{background:rgba(127,127,127,.18);color:var(--t2);box-shadow:none}
+.di.pg.cur .ico{color:var(--t)}
