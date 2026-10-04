@@ -169,3 +169,11 @@ html.theming:not(.vt-theme) :is(button:not(.sw),a,input,.glass,.fmt,.rc,.card,.s
 /* iOS tanpa View Transition: hanya bayangan berisi angka tetap (tidak lewat token warna) yang perlu memudar sendiri.
    Latar dan bayangan berbasis token (.ico, kartu, tombol) sudah memudar lewat token, jadi tidak diberi transisi lagi (kalau diberi, jadi tertinggal). */
 html.theming:not(.vt-theme) :is(.btn,.fld input,.cc,.ps,.seg){transition:box-shadow .55s cubic-bezier(.4,0,.2,1)!important}
+
+/* Pilih negara: panel dibuat solid supaya huruf awalan (A, B, C...) yang menempel di atas tidak tembus pandang
+   (dulu nama negara terlihat bertumpuk di belakangnya dan warnanya lebih gelap dari panel) */
+:root{--sheetbg:#fff}
+[data-theme=dark]{--sheetbg:#1c1c1e}
+.sheet .pn{background:var(--sheetbg);-webkit-backdrop-filter:none;backdrop-filter:none}
+.sheet .pn .pt{background:var(--sheetbg)}
+.sheet .pn .lh{background:var(--sheetbg);-webkit-backdrop-filter:none;backdrop-filter:none;color:var(--t2)}
