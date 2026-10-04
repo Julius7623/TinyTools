@@ -35,7 +35,7 @@ button:active{transform:scale(.97)}
 .sw.on{--x:20px}
 .kn>*{grid-area:1/1;transition:opacity .3s var(--e),transform .42s var(--sp)}
 .kn b{font-size:13px;font-weight:700}
-.kn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .k1,.sun{opacity:0;transform:scale(.6)}
 .sw.on .k1,.sw.on .sun{opacity:1;transform:none}
 .sw.on .k0,.sw.on .moon{opacity:0;transform:scale(.6)}
@@ -95,7 +95,7 @@ h1{letter-spacing:-.045em;font-weight:750}
 .credit b{font:600 12px var(--mono);letter-spacing:.02em;color:var(--t)}
 
 .mb{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--g);border:1px solid var(--gb);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
-.mb svg{width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
+.mb svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.75;fill:none;stroke-linecap:round}
 /* Scrim: warna latar dianimasikan (bukan opacity/visibility) supaya tint status bar & bar bawah Safari ikut halus. Melebar melewati tepi layar atas & bawah. */
 .scrim{position:fixed;left:0;right:0;top:-120px;bottom:-120px;z-index:40;background:rgba(0,0,0,0);pointer-events:none;transition:background-color .4s cubic-bezier(.4,0,.2,1)}
 body.menu{overflow:hidden}body.menu .scrim,body.dim .scrim{background:rgba(0,0,0,.5);pointer-events:auto}
@@ -109,7 +109,7 @@ body.menu .drawer{transform:none;visibility:visible;transition:transform .45s cu
 a.di:hover{background:rgba(127,127,127,.12)}
 .di.cur{background:rgba(127,127,127,.16)}
 .ico{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--ac);color:var(--act)}
-.ico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ico svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .di span.tx{display:flex;flex-direction:column;min-width:0}.di b{font-size:15px}.di small{font-size:13px;color:var(--t2);line-height:1.3}
 .di.soon{opacity:.55;cursor:default}.di.soon .ico{background:rgba(127,127,127,.2);color:var(--t2)}
 .chip{margin-left:auto;flex:none;font:700 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--t2)}
@@ -194,7 +194,7 @@ body.menu .drawer{transform:none}
 
 .err{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:16px;padding:32px 24px 24px;text-align:center}
 .eic{width:56px;height:56px;border-radius:22.37%;display:grid;place-items:center;background:rgba(127,127,127,.18);margin-bottom:4px}
-.eic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.eic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .err b{font-size:20px;font-weight:600;letter-spacing:-.01em}
 .err p{color:var(--t2);font-size:15px;line-height:1.4;max-width:380px;text-wrap:balance}
 .err .tip{color:var(--t)}

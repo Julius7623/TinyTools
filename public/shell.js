@@ -1,15 +1,15 @@
 (()=>{
 const D=document,R=D.documentElement,$=s=>D.querySelector(s);
 const P={
-home:'<path d="M4 11l8-7 8 7M6 10v9h12v-9"/>',
-dl:'<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
-pdf:'<path d="M7 3h7l4 4v14H7zM14 3v4h4M10 13h5M10 17h5"/>',
-img:'<rect x="4" y="5" width="16" height="14" rx="3"/><circle cx="9" cy="10" r="1.5"/><path d="M5 17l4.500-4.500 3 3 2-2L19 17"/>',
-vid:'<rect x="4" y="6" width="12" height="12" rx="3"/><path d="M16 11l4-2.500v7L16 13"/>',
-qr:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h2v2h-2zM18 18h2M14 19h2"/>',
-txt:'<path d="M5 6h14M12 6v13M9 19h6"/>',
-word:'<path d="M7 3h7l4 4v14H7zM14 3v4h4M9.500 11l1.200 5 1.300-4 1.300 4 1.200-5"/>',
-help:'<circle cx="12" cy="12" r="9"/><path d="M9.600 9.500a2.500 2.500 0 1 1 3.500 2.300c-.7.4-1.100.9-1.100 1.700M12 17h.01"/>'};
+home:'<path d=\"M4 11.2 12 4l8 7.2\"/><path d=\"M6.5 9.6V19a1 1 0 0 0 1 1h3v-5h3v5h3a1 1 0 0 0 1-1V9.6\"/>',
+dl:'<path d=\"M12 4v10M8 10.5l4 4 4-4\"/><path d=\"M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3\"/>',
+pdf:'<path d=\"M7 3h6.5L19 8.5V19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z\"/><path d=\"M13.5 3v4a1.5 1.5 0 0 0 1.500 1.500H19\"/><path d=\"M9 13h6M9 16.5h4\"/>',
+img:'<rect x=\"4\" y=\"5\" width=\"16\" height=\"14\" rx=\"3\"/><circle cx=\"9\" cy=\"10\" r=\"1.5\"/><path d=\"M5 17l4.500-4.500 3 3 2-2L19 17\"/>',
+vid:'<rect x=\"4\" y=\"6\" width=\"12\" height=\"12\" rx=\"3\"/><path d=\"M16 11l4-2.500v7L16 13\"/>',
+qr:'<rect x=\"4\" y=\"4\" width=\"6.500\" height=\"6.500\" rx=\"1.500\"/><rect x=\"13.500\" y=\"4\" width=\"6.500\" height=\"6.500\" rx=\"1.500\"/><rect x=\"4\" y=\"13.500\" width=\"6.500\" height=\"6.500\" rx=\"1.500\"/><path d=\"M14 14h2.500v2.500H14zM19.500 14v.01M19.500 17.500V20H17\"/>',
+txt:'<path d=\"M5 6h14M12 6v13M9 19h6\"/>',
+word:'<path d=\"M7 3h6.5L19 8.5V19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z\"/><path d=\"M13.5 3v4a1.5 1.5 0 0 0 1.500 1.500H19\"/><path d=\"M8.800 12.500l1.300 5 1.900-4 1.900 4 1.300-5\"/>',
+help:'<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.600 9.500a2.500 2.500 0 1 1 3.500 2.300c-.7.4-1.100.9-1.100 1.700M12 17h.01\"/>'};
 const TOOLS=[
 {n:'Video Downloader',p:'/grab',d:'Save a video from a link',i:'dl',live:1},
 {n:'QR Maker',p:'/qr',d:'Make a QR code',i:'qr',live:1},
