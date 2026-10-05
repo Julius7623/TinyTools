@@ -4,6 +4,7 @@
    FLAT  : kartu, daftar, kolom ketik, tombol di dalam halaman, segmen, ikon. Permukaan solid, tanpa kilap. */
 
 :root{
+  --scrim-a:.32;
   --bg:#f2f2f7;
   --t2:#5f5f69;
   --card:#fff;
@@ -101,8 +102,8 @@ a.card:active,.fmt:active,.rc:active{scale:.975}
   box-shadow:0 20px 60px var(--shc),inset 0 1.5px 0 var(--hl);
 }
 .rdy{border:1.5px solid color-mix(in srgb,var(--ac) 55%,transparent)}
-body.menu .scrim,body.dim .scrim{background:rgba(0,0,0,.35)}
-.dlg.on{background:rgba(0,0,0,.35)}
+body.menu .scrim,body.dim .scrim{background:rgba(0,0,0,var(--scrim-a))}
+.dlg.on{background:rgba(0,0,0,var(--scrim-a))}
 .pt{background:transparent}
 .lh{background:color-mix(in srgb,var(--bg) 70%,transparent)}
 /* Drawer di layar lebar menempel di sisi halaman, jadi panel biasa (flat) */

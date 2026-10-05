@@ -27,7 +27,7 @@ const baseRGB=()=>{const p=D.createElement('i');p.style.cssText='position:fixed;
 const paint=(m,al,fresh)=>{const k=1-al,c=`rgb(${Math.round(m[0]*k)},${Math.round(m[1]*k)},${Math.round(m[2]*k)})`;let t=D.querySelector('meta[name=theme-color]');if(!t){t=D.createElement('meta');t.name='theme-color';D.head.append(t)}t.content=c;edges(c,fresh)};
 const ease=(()=>{const cx=3*.4,bx=3*(.2-.4)-cx,ax=1-cx-bx,cy=0,by=3*1-cy,ay=1-cy-by,X=t=>((ax*t+bx)*t+cx)*t,Y=t=>((ay*t+by)*t+cy)*t,dX=t=>(3*ax*t+2*bx)*t+cx;   // cubic-bezier(.4,0,.2,1), kurva yang sama dengan transisi scrim
  return x=>{if(x<=0)return 0;if(x>=1)return 1;let t=x;for(let i=0;i<6;i++){const e=X(t)-x;if(Math.abs(e)<1e-4)break;const d=dX(t);if(Math.abs(d)<1e-6)break;t-=e/d}return Y(t)}})();
-const tcolor=()=>{const B=D.body,s=D.querySelector('.scrim'),dim=B.classList.contains('menu')||B.classList.contains('dim'),tg=dim?.2:0;
+const tcolor=()=>{const B=D.body,s=D.querySelector('.scrim'),dim=B.classList.contains('menu')||B.classList.contains('dim'),tg=dim?(parseFloat(getComputedStyle(D.documentElement).getPropertyValue('--scrim-a'))||.32):0;
  cancelAnimationFrame(raf);tt.forEach(clearTimeout);
  const R0=D.documentElement,th=R0.dataset.theme,BGc=x=>x==='dark'?[0,0,0]:[242,242,247];
  if(th!==tcolor.th){const from=BGc(tcolor.th||th),to=BGc(th),first=!tcolor.th;tcolor.th=th;

@@ -64,3 +64,48 @@ main :is(.glass,.job,.err,.pv,.how,.doc,.qrbox,.form){padding-block:16px}
 .cards{margin-top:24px}
 .qrbox .eb>*{flex:1 1 0;min-width:0;max-width:none;box-sizing:border-box;padding-inline:0}
 .drawer .foot,.drawer .credit{padding-inline:12px}
+
+/* ---------- Daftar negara: panel solid, huruf kapital menempel rapi ---------- */
+.sheet .pn{background:var(--card);-webkit-backdrop-filter:none;backdrop-filter:none}
+.pt{background:var(--card)}
+.plist{padding:0 8px 12px;-webkit-mask-image:none;mask-image:none}
+.lh{top:0;margin:0 -8px;padding:10px 20px 6px;background:var(--card);color:var(--t2);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.ci{min-height:48px}
+.ci .nm{font-weight:500}
+
+/* ---------- Options (QR): label sejajar tepi kontrol, isi satu kolom ---------- */
+@media(max-width:959px){
+  .qrbox .opt{align-items:stretch;gap:10px;padding:14px 12px 12px;margin-top:8px;border-radius:18px}
+  .qrbox .opt .ol{align-self:flex-start;padding:0 6px;font-size:13px;font-weight:600;color:var(--t2);letter-spacing:.01em}
+  .qrbox .opt .seg.sm{width:100%;margin:0}
+  .qrbox .opt .sub2{width:100%;max-width:none;margin:0;padding:0 6px;text-align:center;min-height:0;line-height:1.35}
+}
+
+/* ---------- Pilih negara: panel solid supaya huruf awal tidak menumpuk atau tembus pandang ---------- */
+.sheet .pn{
+  background:var(--card);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  border:0;
+  box-shadow:0 24px 64px rgba(0,0,0,.28),0 0 0 .5px var(--gb);
+}
+.sheet .pt{background:var(--card)}
+.sheet .plist{padding:0 8px 12px;-webkit-mask-image:none;mask-image:none}
+.sheet .lh{
+  top:0;margin:0 -8px;padding:10px 20px 6px;
+  background:var(--card);
+  font-size:12px;font-weight:600;letter-spacing:.06em;
+}
+.sheet .ps{background:var(--fill);border:0}
+.sheet .ci{border-radius:12px}
+.sheet .ci:hover{background:var(--fill)}
+
+/* ---------- Options QR: label di kiri atas, kontrol selebar kartu, penjelasan di tengah ---------- */
+.qrbox .advw{margin-top:4px}
+.qrbox .opt{
+  display:flex;flex-direction:column;align-items:stretch;
+  gap:10px;padding:14px 16px;margin-top:8px;
+  border-radius:18px;background:var(--fill);
+}
+.qrbox .opt .ol{align-self:flex-start;padding:0;font-size:13px;font-weight:600;color:var(--t2)}
+.qrbox .opt .seg.sm{width:100%;max-width:none;margin:0}
+.qrbox .opt .sub2{margin:0;min-height:0;text-align:center;font-size:13px;color:var(--t2)}
