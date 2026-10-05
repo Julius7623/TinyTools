@@ -13,3 +13,7 @@ Create QR codes for links, text, Wi-Fi, and WhatsApp. Codes are generated in the
 
 ## Deployment
 The included Dockerfile installs FFmpeg, yt-dlp nightly, and PDF tooling.
+
+## Environment variables (Render)
+Optional: `COOKIES_B64`, `PROXY_URL`, `YTDLP_CHANNEL`, `MAX_MB`, `MAX_JOBS`, `MAX_PDF_MB`, `PUBLIC_ORIGIN` (fixes the canonical/sitemap origin; otherwise taken from the Host header after validation).
+Static assets are pre-compressed (.br/.gz) during `docker build` (`node server.js --precompress`).

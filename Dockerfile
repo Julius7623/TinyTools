@@ -14,13 +14,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg python3 
  && chmod a+rx /opt/ytdlp/yt-dlp \
  && chown -R node:node /opt/ytdlp
 # venv di depan PATH: skrip yt-dlp memakai python3 milik venv, sehingga curl_cffi terbaca
-ENV PATH="/opt/venv/bin:/opt/ytdlp:${PATH}" NODE_ENV=production
+# NODE_OPTIONS: batasi heap Node (instance free hanya 512 MB, sisanya dipakai ffmpeg/yt-dlp/pdf2docx); bisa ditimpa lewat env var Render
+ENV PATH="/opt/venv/bin:/opt/ytdlp:${PATH}" NODE_ENV=production NODE_OPTIONS="--max-old-space-size=256"
 # Gagalkan build lebih awal (bukan saat dipakai pengguna) bila yt-dlp / impersonasi tidak berfungsi
 RUN yt-dlp --version && python3 -c "import curl_cffi; print('curl_cffi', curl_cffi.__version__)" && python3 -c "import fitz, pdf2docx; print('pdf2word ok')" && (yt-dlp --list-impersonate-targets 2>&1 | head -8 || true)
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+# --ignore-scripts: dependensi tidak boleh menjalankan skrip install (rantai pasok)
+RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
 COPY --chown=node:node . .
+# Kompres aset statis (.br/.gz) sekali saat build, bukan tiap cold start di instance yang lambat
 USER node
+RUN node server.js --precompress && ls public/*.br >/dev/null
 EXPOSE 3000
 CMD ["node", "server.js"]

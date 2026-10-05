@@ -12,8 +12,13 @@ import { join } from 'node:path';
 import { randomUUID, createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
-const app = Fastify({ logger: false, trustProxy: true }); // logger off: URL tidak pernah dicatat
-await app.register(rateLimit, { global: false, errorResponseBuilder: (_q, c) => ({ statusCode: 429, ec: 'RATE', error: 'Too Many Requests', message: `Terlalu banyak permintaan, coba lagi dalam ${Math.ceil(c.ttl / 1000)} detik` }) }); // hanya /api/* yang dibatasi; halaman & aset statis tidak
+// keepAliveTimeout > batas idle load balancer Render: mencegah 502 acak karena koneksi yang sudah ditutup Node masih dipakai ulang proxy
+const app = Fastify({ logger: false, trustProxy: true, keepAliveTimeout: 65000 }); // logger off: URL tidak pernah dicatat
+// IP klien untuk rate limit: Render hanya MENAMBAH ke X-Forwarded-For (isi dari klien tidak dibuang), jadi entri paling kiri bisa dipalsukan.
+// Cloudflare di depan Render menimpa cf-connecting-ip / true-client-ip, jadi header itu dipakai lebih dulu; cadangan: req.ip.
+const hdr = v => (Array.isArray(v) ? v[0] : v || '').toString().trim().slice(0, 64);
+const clientIp = q => hdr(q.headers['cf-connecting-ip']) || hdr(q.headers['true-client-ip']) || q.ip;
+await app.register(rateLimit, { global: false, keyGenerator: clientIp, errorResponseBuilder: (_q, c) => ({ statusCode: 429, ec: 'RATE', error: 'Too Many Requests', message: `Terlalu banyak permintaan, coba lagi dalam ${Math.ceil(c.ttl / 1000)} detik` }) }); // hanya /api/* yang dibatasi; halaman & aset statis tidak
 const RL = max => ({ config: { rateLimit: { max, timeWindow: '1 minute' } } });
 const PUB = fileURLToPath(new URL('./public', import.meta.url));
 // Kompresi: berkas statis teks dibuat versi .br/.gz sekali saat start (tanpa dependensi baru), lalu disajikan lewat preCompressed
@@ -25,10 +30,13 @@ try {
       if (!existsSync(p + ext) || statSync(p + ext).mtimeMs < t) writeFileSync(p + ext, fn(readFileSync(p)));
   }
 } catch { /* folder tidak bisa ditulis: lewati, tetap jalan tanpa kompresi statis */ }
+if (process.argv.includes('--precompress')) process.exit(0); // dipanggil saat docker build: kompresi dikerjakan sekali di build, bukan tiap cold start
 await app.register(fastifyStatic, {
-  root: PUB, extensions: ['html'], index: false, preCompressed: true, cacheControl: false,
-  setHeaders: (res, p) => res.setHeader('Cache-Control',
-    /\.(css|js)(\.br|\.gz)?$/.test(p) ? 'public, max-age=86400, stale-while-revalidate=604800' : /\.(png|webmanifest)(\.br|\.gz)?$/.test(p) ? 'public, max-age=604800' : 'no-cache'),
+  root: PUB, extensions: ['html'], index: false, preCompressed: true, cacheControl: false, dotfiles: 'ignore',
+  // @fastify/static v10: argumen pertama adalah Reply. URL berversi (?v=<hash isi berkas>) tak pernah berubah isinya -> immutable 1 tahun
+  setHeaders: (reply, p) => reply.header('Cache-Control',
+    /\.(css|js)(\.br|\.gz)?$/.test(p) ? (/[?&]v=[0-9a-f]{8}(&|$)/.test(reply.request.url) ? 'public, max-age=31536000, immutable' : 'public, max-age=86400, stale-while-revalidate=604800')
+    : /\.(png|webmanifest)(\.br|\.gz)?$/.test(p) ? 'public, max-age=604800' : 'no-cache'),
 });
 
 // Halaman HTML: isi __ORIGIN__ dengan domain asli (untuk canonical, Open Graph, sitemap)
@@ -36,7 +44,8 @@ const PAGES = { '/': 'index', '/grab': 'grab', '/qr': 'qr', '/legal': 'legal', '
 // Versi aset (?v=...) diisi otomatis dari isi berkas CSS/JS saat server start: cukup ganti berkas aset-nya, HTML tidak perlu diedit
 const ver = n => createHash('sha1').update(readFileSync(join(PUB, n))).digest('hex').slice(0, 8);
 const html = Object.fromEntries(Object.entries(PAGES).map(([p, f]) => [p, readFileSync(join(PUB, f + '.html'), 'utf8').replace(/([\w-]+\.(?:css|js))\?v=\d+/g, (m, n) => existsSync(join(PUB, n)) ? `${n}?v=${ver(n)}` : m)]));
-const origin = q => `${q.protocol}://${q.hostname}`;
+// Host dari klien tidak dipercaya mentah (masuk ke HTML/sitemap): hanya karakter hostname yang sah, atau PUBLIC_ORIGIN bila diset
+const origin = q => process.env.PUBLIC_ORIGIN || `${q.protocol}://${/^[a-z0-9.-]{1,253}$/i.test(q.hostname) ? q.hostname : 'localhost'}`;
 // HTML dikompres per domain dan disimpan di memori (dibatasi 200 entri supaya header Host palsu tidak menumpuk memori)
 const zcache = new Map();
 const enc = q => { const a = q.headers['accept-encoding'] || ''; return /\bbr\b/.test(a) ? 'br' : /\bgzip\b/.test(a) ? 'gzip' : ''; };
@@ -54,9 +63,14 @@ app.get('/sitemap.xml', (q, r) => r.type('application/xml').send(
   Object.keys(PAGES).map(p => `  <url><loc>${origin(q)}${p === '/' ? '' : p}</loc></url>`).join('\n') + `\n</urlset>\n`));
 app.get('/robots.txt', (q, r) => r.type('text/plain').send(`User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${origin(q)}/sitemap.xml\n`));
 app.get('/healthz', (_q, r) => r.type('text/plain').send('ok')); // untuk UptimeRobot dkk
-const CSP = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'";
+const CSP = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; frame-src 'none'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'";
+const PERMS = 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=(), interest-cohort=()';
 app.addHook('onSend', async (q, r) => {
-  r.header('X-Content-Type-Options', 'nosniff'); r.header('Referrer-Policy', 'strict-origin-when-cross-origin'); r.header('Content-Security-Policy', CSP);
+  const https = q.protocol === 'https';
+  r.header('X-Content-Type-Options', 'nosniff'); r.header('Referrer-Policy', 'strict-origin-when-cross-origin');
+  r.header('Content-Security-Policy', https ? CSP + '; upgrade-insecure-requests' : CSP);
+  r.header('X-Frame-Options', 'DENY'); r.header('Permissions-Policy', PERMS); r.header('Cross-Origin-Opener-Policy', 'same-origin');
+  if (https) r.header('Strict-Transport-Security', 'max-age=31536000'); // tanpa includeSubDomains/preload: aman bila nanti ganti domain
   if (q.url.startsWith('/api/') && !q.url.startsWith('/api/file/')) r.header('Cache-Control', 'no-store'); // status unduhan tidak boleh di-cache
 });
 app.setErrorHandler((e, _q, r) =>
@@ -123,6 +137,7 @@ const priv = raw => {
 };
 
 async function safeUrl(raw = '') {
+  if (typeof raw !== 'string' || raw.length > 2048) throw fail(400, 'BAD_URL');
   let u; try { u = new URL(raw); } catch { throw fail(400, 'BAD_URL'); }
   if (!/^https?:$/.test(u.protocol) || u.username || u.password) throw fail(400, 'BAD_URL');
   if (u.port && u.port !== '80' && u.port !== '443') throw fail(400, 'ADDR');
@@ -173,6 +188,11 @@ function loadCookies() {
 }
 const hasCookies = loadCookies();
 
+// Proses anak (yt-dlp mengurai situs tak tepercaya, pdf2docx mengurai PDF tak tepercaya) tidak perlu melihat rahasia di environment:
+// cookies dibaca dari berkas /tmp/cookies.txt dan proxy diberikan lewat argumen.
+const SECRET_ENV = new Set(['COOKIES_B64', 'COOKIES', 'YT_COOKIES', 'PROXY_URL']);
+const CHILD_ENV = Object.fromEntries(Object.entries(process.env).filter(([k]) => !SECRET_ENV.has(k)));
+const PDF_ENV = { PATH: process.env.PATH, HOME: '/tmp', TMPDIR: tmpdir(), LANG: 'C.UTF-8', PYTHONDONTWRITEBYTECODE: '1', PYTHONNOUSERSITE: '1' };
 const YTDLP = process.env.YTDLP_BIN || 'yt-dlp';
 const BASE = [
   '-4', '--js-runtimes', 'node', '--remote-components', 'ejs:github', // JS runtime + solver n-challenge YouTube (cadangan bila tidak ikut ter-bundle)
@@ -184,7 +204,7 @@ const BASE = [
 ];
 
 const run = (args, { ms = DL_MS, onOut } = {}) => new Promise((ok, no) => {
-  const p = spawn(YTDLP, [...BASE, ...args]);
+  const p = spawn(YTDLP, [...BASE, ...args], { env: CHILD_ENV });
   let out = '', e = '', buf = '', timedOut = false;
   const t = setTimeout(() => { timedOut = true; p.kill('SIGKILL'); }, ms);
   p.stdout.on('data', d => {
@@ -389,7 +409,7 @@ async function work(job, url, { f, k, e, h, item }) {
 app.get('/api/prepare', RL(15), async req => {
   const { f, k, e } = req.query;
   const url = await safeUrl(req.query.url);
-  if (!/^[\w.+-]{1,40}$/.test(f || '')) throw fail(400, 'BAD_FORMAT');
+  if (!/^\w[\w.+-]{0,39}$/.test(f || '')) throw fail(400, 'BAD_FORMAT');
   if (busy >= MAX_JOBS) throw fail(503, 'BUSY');
   busy++;
   let dir;
@@ -454,7 +474,7 @@ function workPdf(job, out) {
     } finally { pdfBusy--; }
   };
   const timer = setTimeout(() => { killed = true; p?.kill('SIGKILL'); }, PDF_MS);
-  p = spawn(PYTHON, [PDF2WORD, join(job.dir, 'in.pdf'), join(job.dir, out), String(MAX_PDF_PAGES)], { stdio: ['ignore', 'pipe', 'pipe'] });
+  p = spawn(PYTHON, [PDF2WORD, join(job.dir, 'in.pdf'), join(job.dir, out), String(MAX_PDF_PAGES)], { stdio: ['ignore', 'pipe', 'pipe'], env: PDF_ENV });
   let buf = '';
   p.stdout.on('data', d => {
     buf += d; let i;
@@ -483,7 +503,8 @@ app.post('/api/p2w', { config: RL(6).config, bodyLimit: MAX_PDF_MB * 1048576 }, 
 });
 
 // yt-dlp diperbarui otomatis (instance free selalu mulai dari image build, jadi perlu dicek saat start)
-const upd = () => execFile(YTDLP, ['-U', '--update-to', CHANNEL], { timeout: 120000 }, () => {});
-upd(); setInterval(upd, 12 * 3600e3);
+const upd = () => execFile(YTDLP, ['-U', '--update-to', CHANNEL], { timeout: 120000, env: CHILD_ENV }, () => {});
+// Image sudah memuat nightly saat build: pembaruan pertama ditunda 2 menit supaya tidak berebut CPU/RAM dengan permintaan pertama saat cold start
+setTimeout(upd, 120e3).unref(); setInterval(upd, 12 * 3600e3).unref();
 
 app.listen({ port: +process.env.PORT || 3000, host: '0.0.0.0' });
