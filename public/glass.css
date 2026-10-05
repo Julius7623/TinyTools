@@ -1,35 +1,31 @@
-/* ===== Liquid Glass (gaya iOS 26), latar polos =====
-   Dimuat TERAKHIR di semua halaman. Latar satu warna (putih / hitam lembut).
-   Kartu di dalam halaman = kaca tipis TANPA backdrop-filter (di latar polos blur tidak terlihat,
-   dan backdrop-filter bertingkat membuat sudut kartu jadi kotak hitam di Safari).
-   backdrop-filter hanya dipakai untuk lapisan yang melayang di atas konten. */
+/* ===== MyTinyTools: Liquid Glass hanya untuk lapisan yang melayang (gaya iOS 26/27) =====
+   Dimuat TERAKHIR di semua halaman.
+   GLASS : tombol menu di header, saklar tema, drawer menu, toast, dialog, sheet, banner "ready".
+   FLAT  : kartu, daftar, kolom ketik, tombol di dalam halaman, segmen, ikon. Permukaan solid, tanpa kilap. */
 
 :root{
   --bg:#f2f2f7;
   --t2:#5f5f69;
-  --card:rgba(255,255,255,.72);
+  --card:#fff;
   --g:rgba(255,255,255,.72);
   --gb:rgba(0,0,0,.07);
-  --fill:rgba(120,120,135,.14);
+  --fill:rgba(120,120,128,.12);
   --btn:rgba(255,255,255,.8);
-  --inp:rgba(120,120,135,.1);
   --hl:rgba(255,255,255,1);
   --shc:rgba(20,20,60,.11);
   --rim1:rgba(255,255,255,1);
   --rim2:rgba(0,0,0,.06);
   --gl1:rgba(255,255,255,.9);--gl2:rgba(255,255,255,.35);--gl3:rgba(255,255,255,.6);
   --sheen:linear-gradient(160deg,var(--gl1),var(--gl2) 55%,var(--gl3));
-  --blur:blur(30px) saturate(180%);
 }
 [data-theme=dark]{
   --bg:#000;
   --t2:#98989f;
-  --card:rgba(255,255,255,.08);
+  --card:#1c1c1e;
   --g:rgba(255,255,255,.08);
   --gb:rgba(255,255,255,.12);
-  --fill:rgba(120,120,135,.28);
+  --fill:rgba(120,120,128,.24);
   --btn:rgba(255,255,255,.12);
-  --inp:rgba(255,255,255,.07);
   --hl:rgba(255,255,255,.16);
   --shc:rgba(0,0,0,.6);
   --rim1:rgba(255,255,255,.4);
@@ -39,147 +35,77 @@
 html,body{background:var(--bg)}
 body::before,body::after{content:none}
 
-/* ---------- Kartu di halaman: kaca tipis, tanpa blur ---------- */
+/* ---------- FLAT: kartu dan panel di halaman ---------- */
 main :is(.glass,.fmt,.rc,.card,.drop,.job,.opt,.uploadBox,.err,.pv,.sk,.how,.doc,.qrbox,.form){
-  background:var(--sheen),var(--card);
+  background:var(--card);
   -webkit-backdrop-filter:none;backdrop-filter:none;
-  border:0;
-  box-shadow:0 8px 24px var(--shc),0 0 0 .5px var(--gb),inset 0 1.5px 0 var(--hl),inset 0 -1px 0 rgba(255,255,255,.1);
-  position:relative;
+  border:0;box-shadow:none;position:relative;
 }
-[data-theme=dark] main :is(.glass,.fmt,.rc,.card,.drop,.job,.opt,.uploadBox,.err,.pv,.sk,.how,.doc,.qrbox,.form){box-shadow:0 8px 24px var(--shc),inset 0 0 0 1px var(--gb),inset 0 1.5px 0 var(--hl)}
-main :is(.glass,.drop,.job,.err,.pv,.sk,.how,.doc,.qrbox,.form){border-radius:28px}
-main :is(.fmt,.rc,.card,.opt,.uploadBox){border-radius:24px}
-main .glass::before{display:none}
-/* Kartu di dalam kartu: lebih tipis supaya tidak terlihat bertumpuk */
-main :is(.qrbox,.form,.how,.doc) :is(.opt,.fmt,.rc){background:var(--fill);box-shadow:inset 0 1px 0 var(--hl)}
-main :is(.rc,.opt,.how,.doc,.uploadBox,.pv)::after{content:none}
+main :is(.glass,.fmt,.rc,.card,.drop,.job,.opt,.uploadBox,.err,.pv,.sk,.how,.doc,.qrbox,.form)::before,
+main :is(.glass,.fmt,.rc,.card,.drop,.job,.opt,.uploadBox,.err,.pv,.sk,.how,.doc,.qrbox,.form)::after{content:none}
+main :is(.glass,.drop,.job,.err,.pv,.sk,.how,.doc,.qrbox,.form){border-radius:24px}
+main :is(.fmt,.rc,.card,.opt,.uploadBox){border-radius:20px}
+/* Kartu di dalam kartu: isi abu tipis supaya terpisah tanpa bayangan */
+main :is(.qrbox,.form,.how,.doc) :is(.opt,.fmt,.rc){background:var(--fill);box-shadow:none}
 .qrbox .opt{box-shadow:none}
 
-a.card,.fmt,.rc,.di{transition:transform .4s var(--sp),scale .35s var(--spring),box-shadow .3s,opacity .3s,filter .3s}
+a.card,.fmt,.rc,.di{transition:scale .35s var(--spring),background-color .25s,opacity .3s}
 a.card:active,.fmt:active,.rc:active{scale:.975}
 .di:active{scale:.98}
 @media(hover:hover) and (pointer:fine){
-  a.card:hover,.fmt:hover{box-shadow:0 14px 32px var(--shc),0 0 0 .5px var(--gb),inset 0 1.5px 0 var(--hl)}
+  a.card:hover,.fmt:hover{box-shadow:none;background:color-mix(in srgb,var(--card) 94%,#808090)}
 }
 
-/* ---------- Tombol ---------- */
-.btn{
-  background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 80%,#fff),var(--ac));
-  box-shadow:0 6px 16px color-mix(in srgb,var(--ac) 26%,transparent),inset 0 1.5px 0 rgba(255,255,255,.3),inset 0 -1.5px 1px rgba(0,0,0,.16);
-}
-[data-theme=dark] .btn{background:linear-gradient(180deg,#fff,#d6d6dc);box-shadow:0 6px 18px rgba(255,255,255,.1),inset 0 1.5px 0 #fff,inset 0 -1.5px 1px rgba(0,0,0,.14)}
-.ghost,.mb,.more,.cl,.bar .clr,.dlg .ghost,.pill{
-  background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,0)),var(--btn);
-  -webkit-backdrop-filter:none;backdrop-filter:none;
-  box-shadow:0 3px 10px var(--shc),0 0 0 .5px var(--gb),inset 0 1.5px 0 var(--hl);
-}
-[data-theme=dark] .ghost,[data-theme=dark] .mb,[data-theme=dark] .more,[data-theme=dark] .cl,[data-theme=dark] .bar .clr,[data-theme=dark] .dlg .ghost,[data-theme=dark] .pill{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,0)),var(--btn);box-shadow:0 3px 10px var(--shc),inset 0 0 0 1px var(--gb),inset 0 1.5px 0 var(--hl)}
+/* ---------- FLAT: tombol ---------- */
+.btn{background:var(--ac);box-shadow:none}
+[data-theme=dark] .btn{background:#fff;box-shadow:none}
+.ghost,.cl,.bar .clr,.dlg .ghost,.pill{background:var(--fill);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
 .more.quiet,.ghost.hide,.pill.hide,.clr.hide{background:none;box-shadow:none}
 .ghost{color:var(--t)}
 @media(hover:hover) and (pointer:fine){
-  .ghost:hover,.mb:hover,.dh .x:hover,.rc:hover{box-shadow:0 3px 10px var(--shc),inset 0 1.5px 0 var(--hl),inset 0 0 0 999px rgba(127,127,127,.12)}
+  .ghost:hover,.dh .x:hover,.rc:hover{box-shadow:inset 0 0 0 999px rgba(127,127,127,.12)}
   .more.quiet:hover{box-shadow:none}
 }
-.dh .x,.px::before{background:var(--btn);box-shadow:inset 0 1px 0 var(--hl)}
+.dh .x,.px::before{background:var(--fill);box-shadow:none}
 
-/* ---------- Kolom ketik ---------- */
-.fld input,.cc,.ps{background:var(--inp);border:0;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 1.5px 3px rgba(0,0,0,.1),inset 0 0 0 1px var(--gb)}
-[data-theme=dark] .fld input,[data-theme=dark] .cc,[data-theme=dark] .ps{box-shadow:inset 0 1.5px 4px rgba(0,0,0,.5),inset 0 0 0 1px var(--gb)}
-.fld input:focus,.ps:focus{box-shadow:inset 0 1.5px 3px rgba(0,0,0,.1),inset 0 0 0 1px var(--gb),var(--ring)}
+/* ---------- FLAT: kolom ketik, segmen ---------- */
+.fld input,.cc,.ps{background:var(--fill);border:0;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+.fld input:focus,.ps:focus{box-shadow:var(--ring)}
 .bar input{background:transparent;box-shadow:none}
-.bar:focus-within{box-shadow:0 8px 24px var(--shc),inset 0 1.5px 0 var(--hl),var(--ring)}
+.bar:focus-within{box-shadow:var(--ring)}
+.seg{background:var(--fill);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+.note{background:var(--fill);box-shadow:none}
+.m i{background:var(--fill)}
+.ico{box-shadow:none}
+.di.cur{background:var(--fill);box-shadow:none}
+.di.pg .ico{background:var(--fill);box-shadow:none}
+.ci.sel{background:var(--fill);box-shadow:none}
+.ci:hover{background:var(--fill)}
 
-/* ---------- Segmen / saklar ---------- */
-.seg{background:var(--fill);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 1.5px 3px rgba(0,0,0,.12),inset 0 -1px 0 rgba(255,255,255,.3)}
-[data-theme=dark] .seg{box-shadow:inset 0 1.5px 4px rgba(0,0,0,.55),inset 0 -1px 0 rgba(255,255,255,.08)}
-.sw{box-shadow:inset 0 1.5px 3px rgba(0,0,0,.2),inset 0 -1px 0 rgba(255,255,255,.25)}
+/* ---------- GLASS: kontrol melayang di header ---------- */
+.mb{
+  background:var(--sheen),var(--btn);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+  border:0;
+  box-shadow:0 4px 14px var(--shc),0 0 0 .5px var(--gb),inset 0 1.5px 0 var(--hl);
+}
+@media(hover:hover) and (pointer:fine){
+  .mb:hover{box-shadow:0 4px 14px var(--shc),inset 0 1.5px 0 var(--hl),inset 0 0 0 999px rgba(127,127,127,.12)}
+}
 
-/* ---------- Lapisan melayang: di sini blur benar-benar terlihat ---------- */
-.drawer,#t,.rdy,.dlg .box,.dlg.flat .box,.sheet .pn{
+/* ---------- GLASS: lapisan yang menutupi konten ---------- */
+.drawer,#t,.rdy,.dlg .box,.sheet .pn{
   background:var(--sheen),color-mix(in srgb,var(--bg) 62%,transparent);
   -webkit-backdrop-filter:blur(40px) saturate(200%);backdrop-filter:blur(40px) saturate(200%);
   border:1px solid var(--gb);
   box-shadow:0 20px 60px var(--shc),inset 0 1.5px 0 var(--hl);
 }
 .rdy{border:1.5px solid color-mix(in srgb,var(--ac) 55%,transparent)}
-.di.cur{background:var(--btn);box-shadow:inset 0 1.5px 0 var(--hl),0 2px 8px var(--shc)}
-.ico{box-shadow:0 4px 10px var(--shc),inset 0 1.5px 0 rgba(255,255,255,.3),inset 0 -1.5px 1px rgba(0,0,0,.16)}
 body.menu .scrim,body.dim .scrim{background:rgba(0,0,0,.35)}
 .dlg.on{background:rgba(0,0,0,.35)}
 .pt{background:transparent}
 .lh{background:color-mix(in srgb,var(--bg) 70%,transparent)}
-.ci.sel{background:var(--btn);box-shadow:inset 0 1px 0 var(--hl)}
-.ci:hover{background:var(--fill)}
+/* Drawer di layar lebar menempel di sisi halaman, jadi panel biasa (flat) */
 @media(min-width:1280px){
-  .drawer{background:var(--sheen),var(--card);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .drawer{background:var(--card);-webkit-backdrop-filter:none;backdrop-filter:none;border:0;box-shadow:none}
 }
-
-/* ---------- Detail ---------- */
-.note{background:var(--fill);box-shadow:inset 0 1px 0 var(--hl)}
-.m i{background:var(--fill)}
-.m i.hd{background:var(--ac)}
-.th{box-shadow:0 4px 14px var(--shc),inset 0 0 0 1px var(--gb)}
-main .drop{border:1.5px dashed rgba(127,127,127,.45)}
-.qrc{box-shadow:0 6px 20px var(--shc),inset 0 0 0 1px rgba(255,255,255,.6)}
-.pgb{background:var(--fill)}
-.credit{border-top:0}
-
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  .drawer,.rdy,.dlg .box,.sheet .pn,#t,.lh{background:var(--bg)}
-}
-
-/* Kartu Durability: label rata kiri dengan padding sama seperti isi kartu (HP & desktop) */
-.opt{padding:16px 20px;gap:12px}
-.opt .ol{align-self:flex-start;padding:0;margin:0;font-size:15px;font-weight:600;color:var(--t);text-align:left}
-.opt .sub2{text-align:left;padding:0;max-width:none}
-@media(max-width:959px){.opt{align-items:stretch}.opt .seg.sm{max-width:none;width:100%}}
-@media(min-width:960px){.opt .ol{align-self:center}}
-
-/* Kartu format yang dilipat/dibuka (.mx memakai overflow:hidden): bayangan luar ikut terpotong jadi sudut tampak kotak.
-   Di dalam .mx pakai garis tepi dalam saja, tanpa bayangan luar. */
-.mx .fmt,.mx .fmt:hover{box-shadow:inset 0 0 0 .5px var(--gb),inset 0 1.5px 0 var(--hl),inset 0 -1px 0 rgba(255,255,255,.1)}
-[data-theme=dark] .mx .fmt,[data-theme=dark] .mx .fmt:hover{box-shadow:inset 0 0 0 1px var(--gb),inset 0 1.5px 0 var(--hl)}
-.mx .fmt{background:var(--card)}
-
-/* Scrim lebih tipis supaya bar Safari atas/bawah tidak jadi abu pekat (nilai alpha harus sama dengan tg di shell.js) */
-body.menu .scrim,body.dim .scrim{background:rgba(0,0,0,.2)}
-[data-theme=dark] body.menu .scrim,[data-theme=dark] body.dim .scrim{background:rgba(0,0,0,.45)}
-.dlg.on{background:rgba(0,0,0,.25)}
-
-/* Pergantian tema: crossfade halus seluruh halaman (View Transitions). Transisi warna per-variabel dimatikan selama itu agar tidak dobel */
-/* Selama crossfade SEMUA transisi per-elemen dimatikan (warna, bayangan, latar), kecuali gerak knob saklar.
-   Jadi setiap tombol, kartu, input, dan teks memudar dengan satu kurva dan satu durasi yang sama (0,5 dtk). */
-html.vt-theme,html.vt-theme *,html.vt-theme *::before,html.vt-theme *::after{transition:none!important}
-html.vt-theme .sw .kn{transition:translate 1.02s var(--spring),scale .6s var(--spring)!important}
-html.vt-theme .sw .kn::before,html.vt-theme .sw .kn::after{transition:opacity .36s cubic-bezier(.4,0,.2,1)!important}
-html.vt-theme header{view-transition-name:none}
-html.vt-theme::view-transition-group(root){animation-duration:.5s}
-html.vt-theme::view-transition-old(root),html.vt-theme::view-transition-new(root){animation-duration:.5s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
-
-/* Fallback tanpa View Transitions: semua token warna dianimasikan bersama, komponen tidak punya transisi warna sendiri */
-@property --btn{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.8)}
-@property --inp{syntax:"<color>";inherits:true;initial-value:rgba(120,120,135,.1)}
-@property --gl1{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.9)}
-@property --gl2{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.35)}
-@property --gl3{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.6)}
-html.ready{transition:--bg var(--tt),--t var(--tt),--t2 var(--tt),--g var(--tt),--gb var(--tt),--hl var(--tt),--shc var(--tt),--ac var(--tt),--ac2 var(--tt),--act var(--tt),--rim1 var(--tt),--rim2 var(--tt),--card var(--tt),--fill var(--tt),--btn var(--tt),--inp var(--tt),--gl1 var(--tt),--gl2 var(--tt),--gl3 var(--tt)}
-html.theming:not(.vt-theme) :is(button:not(.sw),a,input,.glass,.fmt,.rc,.card,.seg,.seg *,.ico,.drawer,.qrc,.opt,.form,.drop,.job,.pv,.err,.how,.doc,.qrbox,.uploadBox){transition-property:none!important}
-
-/* iOS tanpa View Transition: hanya bayangan berisi angka tetap (tidak lewat token warna) yang perlu memudar sendiri.
-   Latar dan bayangan berbasis token (.ico, kartu, tombol) sudah memudar lewat token, jadi tidak diberi transisi lagi (kalau diberi, jadi tertinggal). */
-html.theming:not(.vt-theme) :is(.btn,.fld input,.cc,.ps,.seg){transition:box-shadow .55s cubic-bezier(.4,0,.2,1)!important}
-
-/* Pilih negara: panel dibuat solid supaya huruf awalan (A, B, C...) yang menempel di atas tidak tembus pandang
-   (dulu nama negara terlihat bertumpuk di belakangnya dan warnanya lebih gelap dari panel) */
-:root{--sheetbg:#fff}
-[data-theme=dark]{--sheetbg:#1c1c1e}
-.sheet .pn{background:var(--sheetbg);-webkit-backdrop-filter:none;backdrop-filter:none}
-.sheet .pn .pt{background:var(--sheetbg)}
-.sheet .pn .lh{background:var(--sheetbg);-webkit-backdrop-filter:none;backdrop-filter:none;color:var(--t2)}
-
-/* Menu samping: Home dan How to use = halaman biasa (ikon abu, tanpa kotak putih), alat dikelompokkan di bawah label "Tools" */
-.drawer .dl{margin:14px 0 2px;padding:0 12px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)}
-.drawer .dsep{border:0;height:1px;margin:8px 12px;background:var(--gb);flex:none}
-.di.pg .ico{background:rgba(127,127,127,.18);color:var(--t2);box-shadow:none}
-.di.pg.cur .ico{color:var(--t)}
