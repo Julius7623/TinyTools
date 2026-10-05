@@ -15,6 +15,7 @@
 <script>
 try{var s=localStorage.getItem('theme')}catch(e){}
 document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')
+;try{var o=JSON.parse(localStorage.getItem('mtt')||'0');if(o){document.documentElement.style.cssText=o.css||'';if(o.s)document.documentElement.dataset.glass='solid';if(o.m)document.documentElement.dataset.motion='off'}}catch(e){}
 </script>
 <link rel="stylesheet" href="/base.css?v=9">
 <link rel="stylesheet" href="/ui.css?v=26">

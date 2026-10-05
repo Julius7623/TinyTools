@@ -1,3 +1,4 @@
+window.RMX=(()=>{const q=matchMedia('(prefers-reduced-motion:reduce)');return{get matches(){return q.matches||document.documentElement.dataset.motion==='off'}}})();
 (()=>{
 const D=document,R=D.documentElement,$=s=>D.querySelector(s);
 const P={
@@ -9,6 +10,7 @@ vid:'<rect x=\"4\" y=\"6\" width=\"12\" height=\"12\" rx=\"3\"/><path d=\"M16 11
 qr:'<rect x=\"4\" y=\"4\" width=\"6.500\" height=\"6.500\" rx=\"1.500\"/><rect x=\"13.500\" y=\"4\" width=\"6.500\" height=\"6.500\" rx=\"1.500\"/><rect x=\"4\" y=\"13.500\" width=\"6.500\" height=\"6.500\" rx=\"1.500\"/><path d=\"M14 14h2.500v2.500H14zM19.500 14v.01M19.500 17.500V20H17\"/>',
 txt:'<path d=\"M5 6h14M12 6v13M9 19h6\"/>',
 word:'<path d=\"M7 3h6.5L19 8.5V19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z\"/><path d=\"M13.5 3v4a1.5 1.5 0 0 0 1.500 1.500H19\"/><path d=\"M8.800 12.500l1.300 5 1.900-4 1.900 4 1.300-5\"/>',
+gear:'<path d="M5 8h8M19 8h0M5 16h0M11 16h8"/><circle cx="16" cy="8" r="2.600"/><circle cx="8" cy="16" r="2.600"/>',
 help:'<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.600 9.500a2.500 2.500 0 1 1 3.500 2.300c-.7.4-1.100.9-1.100 1.700M12 17h.01\"/>'};
 const TOOLS=[
 {n:'Video Downloader',p:'/grab',d:'Save a video from a link',i:'dl',live:1},
@@ -31,10 +33,10 @@ const tcolor=()=>{const B=D.body,s=D.querySelector('.scrim'),dim=B.classList.con
  cancelAnimationFrame(raf);tt.forEach(clearTimeout);
  const R0=D.documentElement,th=R0.dataset.theme,BGc=x=>x==='dark'?[0,0,0]:[242,242,247];
  if(th!==tcolor.th){const from=BGc(tcolor.th||th),to=BGc(th),first=!tcolor.th;tcolor.th=th;
-  if(!first&&!dim&&!matchMedia('(prefers-reduced-motion:reduce)').matches){const t1=performance.now(),D2=GlassKit.noVT?550:500;
+  if(!first&&!dim&&!RMX.matches){const t1=performance.now(),D2=GlassKit.noVT?550:500;
    const tk=()=>{const p=Math.min(1,(performance.now()-t1)/D2),e=ease(p);paint(from.map((v,i)=>v+(to[i]-v)*e),0,true);if(p<1)raf=requestAnimationFrame(tk);else{paint(to,0,true);tt=[450,900].map(ms=>setTimeout(()=>paint(baseRGB(),0,true),ms))}};tk();return}}
  const fin=()=>{paint(baseRGB(),tg,true);tt=[450,900].map(ms=>setTimeout(()=>paint(baseRGB(),tg,true),ms))};   // akhir: strip dibuat ulang agar Safari mengambil ulang warnanya
- if(!s||s.style.display==='none'||matchMedia('(prefers-reduced-motion:reduce)').matches){fin();return}
+ if(!s||s.style.display==='none'||RMX.matches){fin();return}
  const m=baseRGB(),v0=getComputedStyle(s).backgroundColor.match(/[\d.]+/g)||[],a0=v0.length>3?+v0[3]:1,t0=performance.now(),DUR=400,LEAD=tg>0?90:-50;   // buka menu: bar mendahului halaman (+90 ms); tutup menu: bar menyusul halaman (-50 ms)
  const tick=()=>{const p=(performance.now()-t0+LEAD)/DUR;paint(m,a0+(tg-a0)*ease(p),true);if(p<1)raf=requestAnimationFrame(tick);else fin()};   // strip dibuat ulang tiap frame: Safari hanya membaca ulang warna bar saat ada elemen baru, bukan saat warna elemen lama diubah
  tick()};
@@ -65,7 +67,7 @@ function themeInit(){
  const dark=()=>R.dataset.theme==='dark',st=v=>{try{localStorage.setItem('theme',v)}catch(e){}};
  const sync=()=>{tsw.classList.toggle('on',dark());tsw.setAttribute('aria-checked',dark())};
  const apply=v=>{R.dataset.theme=v?'dark':'light';st(R.dataset.theme);sync()};
- const set=v=>{if(GlassKit.noVT||!D.startViewTransition||!R.classList.contains('ready')||matchMedia('(prefers-reduced-motion:reduce)').matches){apply(v);return}
+ const set=v=>{if(GlassKit.noVT||!D.startViewTransition||!R.classList.contains('ready')||RMX.matches){apply(v);return}
   R.classList.add('vt-theme');let vt;try{vt=D.startViewTransition(()=>apply(v))}catch(e){apply(v);R.classList.remove('vt-theme');return}
   const done=()=>R.classList.remove('vt-theme');vt.finished.then(done,done)};   // crossfade seluruh halaman: halus di Safari/Chrome terbaru
  let id=null,x0=0,p0=0,trv=0,mv=false;
@@ -81,7 +83,7 @@ D.readyState==='loading'?D.addEventListener('DOMContentLoaded',go):go();
 })();
 
 (()=>{ // tahan / tap / scroll / keyboard. Pakai Web Animations supaya animasi masuk (CSS) tidak ikut terulang
-const D=document,SEL='button,a.card,a.di,.rc',RM=matchMedia('(prefers-reduced-motion:reduce)'),E='cubic-bezier(.4,0,.2,1)',S='cubic-bezier(.34,1.56,.64,1)';
+const D=document,SEL='button,a.card,a.di,.rc',RM=RMX,E='cubic-bezier(.4,0,.2,1)',S='cubic-bezier(.34,1.56,.64,1)';
 let el=null,x0=0,y0=0,t1,t2,quiet=0,ls=0,touch=0;const A=new WeakMap();
 const go=(e,k,o)=>{if(RM.matches)return;const a=e.animate(k,o);A.set(e,[...(A.get(e)||[]),a])};
 const swap=(e,k,o)=>{const old=A.get(e)||[];A.delete(e);if(k)go(e,k,o);old.forEach(a=>a.cancel())};
@@ -94,7 +96,7 @@ const end=c=>{if(!el)return;clearTimeout(t1);clearTimeout(t2);const e=el,seen=e.
  else swap(e,[{scale:.95,opacity:.8},{scale:1,opacity:1}],{duration:400,easing:E})};
 D.addEventListener('scroll',()=>{ls=Date.now();end('cancel')},true);
 D.addEventListener('pointerdown',ev=>{end();if(ev.button>0)return;const b=ev.target.closest(SEL);
- if(!b||b.disabled||b.getAttribute('aria-disabled')==='true'||b.closest('.sw,.seg'))return;el=b;x0=ev.clientX;y0=ev.clientY;touch=ev.pointerType!=='mouse';
+ if(!b||b.disabled||b.getAttribute('aria-disabled')==='true'||b.closest('.sw,.seg,.gs-seg,.gs-sw'))return;el=b;x0=ev.clientX;y0=ev.clientY;touch=ev.pointerType!=='mouse';
  quiet=Date.now()-ls<250?1:0; // layar masih bergulir: sentuhan ini hanya menghentikan scroll
  if(quiet)return;
  t1=setTimeout(()=>el&&hold(el),touch?130:40);t2=setTimeout(()=>el&&arm(el),touch?600:450)});
@@ -104,13 +106,13 @@ D.addEventListener('pointerup',ev=>{if(!el)return;const e=el,ok=el.contains(ev.t
  if(ok&&touch&&e.hasAttribute('data-fast')&&!e.disabled){e.click();e._ft=Date.now()}}); // aksi langsung saat jari diangkat, tanpa menunggu click
 D.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('[data-fast]');if(b&&b._ft&&ev.detail&&Date.now()-b._ft<700){ev.stopImmediatePropagation();ev.preventDefault()}},true);
 ['pointercancel','contextmenu','blur'].forEach(n=>addEventListener(n,()=>end('cancel')));
-const pick=ev=>{const b=ev.target.closest&&ev.target.closest(SEL);return b&&!b.disabled&&b.getAttribute('aria-disabled')!=='true'&&!b.closest('.sw,.seg')?b:null};
+const pick=ev=>{const b=ev.target.closest&&ev.target.closest(SEL);return b&&!b.disabled&&b.getAttribute('aria-disabled')!=='true'&&!b.closest('.sw,.seg,.gs-seg,.gs-sw')?b:null};
 D.addEventListener('keydown',ev=>{if(ev.repeat||ev.key!=='Enter'&&ev.key!==' ')return;const b=pick(ev);if(b)hold(b)});
 D.addEventListener('keyup',ev=>{const b=pick(ev);if(b&&b.classList.contains('holding')&&!el){b.classList.remove('holding','armed');swap(b,TAP,{duration:450,easing:S})}});
 })();
 
 (()=>{ // morph: kotak tumbuh/menyusut mengikuti isi baru dan isi baru memudar masuk. Maknanya "isi berubah"; elemen di bawahnya ikut bergeser mulus
-const RM=matchMedia('(prefers-reduced-motion:reduce)'),E='cubic-bezier(.32,.72,0,1)';
+const RM=RMX,E='cubic-bezier(.32,.72,0,1)';
 GlassKit.morph=(el,fn,o={})=>{
  if(!el||RM.matches||!el.animate)return fn();
  const h0=el.offsetHeight;if(el._m)el._m.cancel();
@@ -124,7 +126,7 @@ GlassKit.morph=(el,fn,o={})=>{
 }})();
 
 (()=>{ // blend: teks lama memudar keluar sambil teks baru memudar masuk (dengan blur tipis), tinggi kotak ikut berubah mulus. Maknanya "pesan ini berganti", bukan kedip
-const RM=matchMedia('(prefers-reduced-motion:reduce)'),E='cubic-bezier(.32,.72,0,1)';
+const RM=RMX,E='cubic-bezier(.32,.72,0,1)';
 GlassKit.blend=(el,txt,on=true)=>{
  if(!el)return;const cur=el._bt!==undefined?el._bt:el.textContent;
  if(cur===txt&&el.childElementCount<=1&&el.textContent.trim()===txt.trim())return;
@@ -143,7 +145,7 @@ GlassKit.blend=(el,txt,on=true)=>{
 }})();
 
 (()=>{ // jelly: kaca memanjang searah gerak lalu memantul dan mengendap, seperti benda cair yang berhenti. Maknanya "sudah mendarat di pilihan ini"
-const RM=matchMedia('(prefers-reduced-motion:reduce)');
+const RM=RMX;
 GlassKit.jelly=(el,d,o='center')=>{if(!el||!el.animate||RM.matches)return;const A=Math.min(.16+.1*d,.4)*(o==='center'?1:.55),f=x=>x.toFixed(3),e='cubic-bezier(.4,0,.3,1)',S=(x,y,t)=>({transform:`scale(${f(x)},${f(y)})`,offset:t,easing:e});
  el.style.transformOrigin=o+' center';   // di ujung, kaca bertumpu pada dinding track: melar ke dalam, tidak keluar
  const a=el.animate([S(1,1,0),S(1+A,1-A*.55,.2),S(1-A*.5,1+A*.35,.42),S(1+A*.22,1-A*.12,.62),S(1-A*.08,1+A*.05,.8),S(1,1,1)],{duration:1140});a.onfinish=a.oncancel=()=>{el.style.transformOrigin=''}};
@@ -178,3 +180,65 @@ GlassKit.app=(/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform=
 GlassKit.save=async(blob,name)=>{
  if(GlassKit.app&&navigator.canShare){try{const f=new File([blob],name,{type:blob.type||'application/octet-stream'});if(navigator.canShare({files:[f]})){await navigator.share({files:[f]});return}}catch(e){if(e&&e.name==='AbortError')return}}
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),60000)};
+
+(()=>{ // Settings: tema, gaya kaca (Clear / Default / Tinted), Solid, kurangi animasi, hapus data. Disimpan di localStorage 'mtt'; diterapkan sebelum cat lewat skrip kecil di <head>
+const D=document,R=D.documentElement,KEY='mtt',$=s=>D.querySelector(s);
+const DEF={g:50,s:0,m:0};let st=Object.assign({},DEF);
+try{Object.assign(st,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+const STOPS={'--gk-mix':[34,62,90,'%'],'--gk-blur':[16,40,48,'px'],'--gk-sat':[150,200,200,'%'],'--gk-sp':[35,100,100,'%'],'--gk-bp':[45,100,100,'%'],'--gk-mb':[12,20,24,'px']};   // batas Clear dibuat tidak terlalu bening supaya teks tetap terbaca
+const vars=v=>{const o={};for(const k in STOPS){const a=STOPS[k],x=v<=50?a[0]+(a[1]-a[0])*v/50:a[1]+(a[2]-a[1])*(v-50)/50;o[k]=x.toFixed(1)+a[3]}return o};
+const apply=()=>{const o=vars(st.g);for(const k in o)R.style.setProperty(k,o[k]);
+ st.s?R.dataset.glass='solid':delete R.dataset.glass;st.m?R.dataset.motion='off':delete R.dataset.motion};
+const save=()=>{try{if(st.g===50&&!st.s&&!st.m)localStorage.removeItem(KEY);else localStorage.setItem(KEY,JSON.stringify(Object.assign({},st,{css:Object.entries(vars(st.g)).map(e=>e.join(':')).join(';')})))}catch(e){}};
+const themeMode=()=>{try{return localStorage.getItem('theme')||'auto'}catch(e){return'auto'}};
+const setTheme=m=>{try{m==='auto'?localStorage.removeItem('theme'):localStorage.setItem('theme',m)}catch(e){}
+ const d=m==='auto'?matchMedia('(prefers-color-scheme:dark)').matches:m==='dark';R.dataset.theme=d?'dark':'light';
+ const t=$('#tsw');if(t){t.classList.toggle('on',d);t.setAttribute('aria-checked',d)}};
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(themeMode()==='auto')setTheme('auto')});
+const label=v=>v<=4?'Clear':Math.abs(v-50)<=4?'Default':v>=96?'Tinted':v<50?'Between Clear and Default':'Between Default and Tinted';
+let sh,rng,opener,open=false,armT;
+const X='<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const seg=(k,o)=>`<div class="gs-seg" data-k="${k}">${o.map(([v,t])=>`<button type="button" data-v="${v}" aria-pressed="false">${t}</button>`).join('')}</div>`;
+const sw=(k,t)=>`<button type="button" class="gs-sw" role="switch" data-k="${k}" aria-checked="false" aria-label="${t}"></button>`;
+const sync=()=>{if(!sh)return;
+ const tm=themeMode();sh.querySelectorAll('[data-k=theme] button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===tm));
+ sh.querySelector('[data-k=s]').setAttribute('aria-checked',!!st.s);sh.querySelector('[data-k=m]').setAttribute('aria-checked',!!st.m);
+ rng.value=st.g;rng.disabled=!!st.s;rng.setAttribute('aria-valuetext',label(st.g));
+ sh.querySelectorAll('.gs-tk span').forEach(s=>s.style.color=!st.s&&Math.abs(st.g-s.dataset.g)<=4?'var(--t)':'')};
+const build=()=>{if(sh)return;
+ sh=D.createElement('div');sh.className='gs';sh.id='gs';sh.setAttribute('role','dialog');sh.setAttribute('aria-modal','true');sh.setAttribute('aria-labelledby','gs-t');sh.inert=true;
+ sh.innerHTML='<div class="gs-ov"></div><div class="gs-pn"><div class="gs-hd"><h2 id="gs-t">Settings</h2><button type="button" class="x" aria-label="Close settings">'+X+'</button></div>'
+ +'<h3>Appearance</h3><div class="gs-grp"><div class="gs-row col"><b>Theme</b>'+seg('theme',[['auto','Auto'],['light','Light'],['dark','Dark']])+'</div></div>'
+ +'<h3>Glass</h3><div class="gs-grp"><div class="gs-row col"><div class="gs-pv" aria-hidden="true"><i>Liquid glass</i></div>'
+ +'<input class="gs-rng" type="range" min="0" max="100" step="1" aria-label="Glass style"><div class="gs-tk" aria-hidden="true"><span data-g="0">Clear</span><span data-g="50">Default</span><span data-g="100">Tinted</span></div></div>'
+ +'<div class="gs-row"><div><b>Solid</b><small>Turn glass off. Easier to read and lighter on older phones.</small></div>'+sw('s','Solid, no glass')+'</div></div>'
+ +'<h3>Motion</h3><div class="gs-grp"><div class="gs-row"><div><b>Reduce animations</b><small>Fewer movements and transitions.</small></div>'+sw('m','Reduce animations')+'</div></div>'
+ +'<div class="gs-foot"><button type="button" class="gs-btn" id="gs-rs">Reset appearance</button><button type="button" class="gs-btn warn" id="gs-cl">Clear saved data on this device</button></div>'
+ +'<p class="gs-note">Clearing removes everything this site saved in this browser, including these settings.</p></div>';
+ D.body.append(sh);rng=sh.querySelector('.gs-rng');
+ const close=()=>shut();
+ sh.querySelector('.gs-ov').onclick=close;sh.querySelector('.x').onclick=close;
+ rng.addEventListener('input',()=>{let v=+rng.value;for(const p of[0,50,100])if(Math.abs(v-p)<=4){v=p;break}rng.value=v;st.g=v;apply();rng.setAttribute('aria-valuetext',label(v));save();sync()});
+ sh.querySelectorAll('.gs-tk span').forEach(s=>s.onclick=()=>{if(st.s)return;st.g=+s.dataset.g;apply();save();sync()});
+ sh.querySelectorAll('[data-k=theme] button').forEach(b=>b.onclick=()=>{setTheme(b.dataset.v);sync()});
+ sh.querySelector('[data-k=s]').onclick=()=>{st.s=st.s?0:1;apply();save();sync()};
+ sh.querySelector('[data-k=m]').onclick=()=>{st.m=st.m?0:1;apply();save();sync()};
+ sh.querySelector('#gs-rs').onclick=()=>{st=Object.assign({},DEF);apply();save();setTheme('auto');sync()};
+ const cl=sh.querySelector('#gs-cl');
+ cl.onclick=()=>{if(!cl.dataset.arm){cl.dataset.arm=1;cl.textContent='Tap again to confirm';armT=setTimeout(()=>{delete cl.dataset.arm;cl.textContent='Clear saved data on this device'},3500);return}
+  clearTimeout(armT);try{localStorage.clear();sessionStorage.clear()}catch(e){}location.reload()}};
+const shut=()=>{if(!open)return;open=false;sh.classList.remove('on');D.body.classList.remove('gs-open');GlassKit.dim(false);
+ [$('main'),$('header')].forEach(e=>e&&(e.inert=false));
+ setTimeout(()=>{if(!open)sh.inert=true},420);
+ const t=opener&&opener.isConnected&&!opener.closest('[inert]')&&opener.offsetParent?opener:$('#mb');t&&t.focus({preventScroll:true})};
+const show=()=>{build();sync();if(open)return;open=true;opener=D.activeElement;
+ const dr=$('#dr');if(D.body.classList.contains('menu')&&dr)dr.querySelector('.x').click();
+ [$('main'),$('header')].forEach(e=>e&&(e.inert=true));
+ sh.inert=false;D.body.classList.add('gs-open');GlassKit.dim(true);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{sh.classList.add('on');sh.querySelector('.x').focus({preventScroll:true})}))};
+D.addEventListener('keydown',e=>{if(e.key==='Escape'&&open)shut()});
+const mount=()=>{const dr=$('#dr'),dc=dr&&dr.querySelector('.dc');if(!dc)return;
+ const b=D.createElement('button');b.type='button';b.className='di pg';b.innerHTML=GlassKit.ico('gear')+'<span class="tx"><b>Settings</b></span>';
+ b.setAttribute('aria-haspopup','dialog');b.onclick=show;dc.before(b)};
+apply();D.readyState==='loading'?D.addEventListener('DOMContentLoaded',mount):mount();
+})();
