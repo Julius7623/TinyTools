@@ -1,0 +1,66 @@
+/* ===== Refine: ritme tata letak, simetri, kepadatan, dan gerak halus =====
+   Dimuat paling akhir. Satu skala jarak (4 / 8 / 12 / 16 / 24), satu kurva gerak. */
+:root{--m:cubic-bezier(.32,.72,0,1);--gut:16px}
+
+/* ---------- Simetri: gutter kiri = kanan, header satu tinggi ---------- */
+body{padding-left:max(var(--gut),env(safe-area-inset-left));padding-right:max(var(--gut),env(safe-area-inset-right))}
+header{min-height:44px;padding-top:12px;margin-bottom:0}
+.mb,.sw{height:40px}.mb{width:40px}
+
+/* ---------- Padat: judul, subjudul, panel lebih rapat dan seirama ---------- */
+main h1{margin:16px 0 4px}
+main .sub{margin:0 auto 16px}
+.hero{padding:8px 0 0}
+.hero h1{margin-top:24px}
+.cards{gap:8px;margin-top:16px}
+.card{padding:12px 16px 12px 12px;border-radius:20px}
+.card .ico{width:44px;height:44px}
+.card p{font-size:14px}
+main .drop{padding:32px 20px}
+main :is(.glass,.drop,.job,.err,.pv,.sk,.how,.doc,.qrbox,.form){border-radius:22px}
+main :is(.glass,.job,.err,.pv,.how,.doc,.qrbox,.form){padding-block:16px}
+.foot{margin-top:20px}
+.credit{margin-top:8px}
+
+/* ---------- Menu samping: label kecil, ikon terbaca, baris seragam ---------- */
+.dl{margin:12px 12px 4px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t2)}
+.dsep{border:0;height:1px;background:var(--gb);margin:8px 12px}
+.di{min-height:48px;padding:6px 12px;gap:12px}
+.di b{font-size:16px}
+.di .ico{width:36px;height:36px;border-radius:11px}
+.di .ico svg{width:20px;height:20px}
+.di.pg .ico{background:var(--fill);color:var(--t)}
+.dh{padding:4px 12px 12px}
+
+/* ---------- Layar lebar: tiga kartu sama tinggi, isi sejajar kiri, ritme lega ---------- */
+@media(min-width:720px){
+  .cards{gap:12px}
+  .card{padding:20px;gap:14px}
+  .card .ico{width:48px;height:48px}
+}
+@media(min-width:1280px){
+  body{padding-left:372px;padding-right:var(--gut)}
+  main{padding-top:clamp(0px,5vh,40px)}
+  /* tautan ini sudah ada di menu samping; tidak diulang di halaman */
+  .fl,.credit{display:none}
+  .foot:not(:has(span[data-i])):not(:has(br)){display:none}
+}
+
+/* ---------- Gerak: satu kurva, masuk berurutan, hormati reduce-motion ---------- */
+@keyframes rise{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
+@media(prefers-reduced-motion:no-preference){
+  main>*{animation:rise .5s var(--m) backwards}
+  main>*:nth-child(2){animation-delay:40ms}
+  main>*:nth-child(3){animation-delay:80ms}
+  main>*:nth-child(4){animation-delay:120ms}
+  main>*:nth-child(n+5){animation-delay:160ms}
+  .card{animation-duration:.5s;animation-timing-function:var(--m)}
+  a.card,.fmt,.rc,.di,.ghost,.btn,.mb{transition-timing-function:var(--m)}
+  ::view-transition-old(root),::view-transition-new(root){animation-duration:.32s;animation-timing-function:var(--m)}
+}
+
+/* ---------- Penyesuaian akhir ---------- */
+.hero{padding-bottom:8px}
+.cards{margin-top:24px}
+.qrbox .eb>*{flex:1 1 0;min-width:0;max-width:none;box-sizing:border-box;padding-inline:0}
+.drawer .foot,.drawer .credit{padding-inline:12px}
