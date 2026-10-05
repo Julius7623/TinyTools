@@ -183,6 +183,7 @@ GlassKit.save=async(blob,name)=>{
 
 (()=>{ // Settings: tema, gaya kaca (Clear / Default / Tinted), Solid, kurangi animasi, hapus data. Disimpan di localStorage 'mtt'; diterapkan sebelum cat lewat skrip kecil di <head>
 const D=document,R=D.documentElement,KEY='mtt',$=s=>D.querySelector(s);
+const LENS='data:image/png;base64,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';
 const DEF={g:50,s:0,m:0};let st=Object.assign({},DEF);
 try{Object.assign(st,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
 const STOPS={'--gk-mix':[34,62,90,'%'],'--gk-blur':[16,40,48,'px'],'--gk-sat':[150,200,200,'%'],'--gk-sp':[35,100,100,'%'],'--gk-bp':[45,100,100,'%'],'--gk-mb':[12,20,24,'px']};   // batas Clear dibuat tidak terlalu bening supaya teks tetap terbaca
@@ -196,33 +197,93 @@ const setTheme=m=>{try{m==='auto'?localStorage.removeItem('theme'):localStorage.
  const t=$('#tsw');if(t){t.classList.toggle('on',d);t.setAttribute('aria-checked',d)}};
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(themeMode()==='auto')setTheme('auto')});
 const label=v=>v<=4?'Clear':Math.abs(v-50)<=4?'Default':v>=96?'Tinted':v<50?'Between Clear and Default':'Between Default and Tinted';
-let sh,rng,opener,open=false,armT;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+let sh,opener,open=false,armT,themeSeg,lq,setLq;
 const X='<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-const seg=(k,o)=>`<div class="gs-seg" data-k="${k}">${o.map(([v,t])=>`<button type="button" data-v="${v}" aria-pressed="false">${t}</button>`).join('')}</div>`;
-const sw=(k,t)=>`<button type="button" class="gs-sw" role="switch" data-k="${k}" aria-checked="false" aria-label="${t}"></button>`;
+
+/* ---- Segmented berlensa (sama dengan di QR): ketuk atau geser kaca ---- */
+function Seg(el,start,on){
+ const bs=[...el.querySelectorAll('button')],th=el.querySelector('.thumb'),n=bs.length;
+ let cur=start,id=null,x0=0,p0=0,sw=0,mv=false,grab=false;
+ el.style.setProperty('--n',n);
+ if(window.CSS&&CSS.supports('filter','url(#lens)')){th.innerHTML='<div class="lensclip"><div class="lens" aria-hidden="true">'+bs.map(b=>'<span>'+b.textContent+'</span>').join('')+'</div></div>';el.classList.add('has-lens');
+  const NS='http://www.w3.org/2000/svg',fid='glens'+(Seg.k=(Seg.k||0)+1),sv=D.createElementNS(NS,'svg');
+  sv.setAttribute('width','0');sv.setAttribute('height','0');sv.style.position='absolute';
+  sv.innerHTML='<filter id="'+fid+'" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage href="'+LENS+'" x="0" y="0" width="1" height="1" preserveAspectRatio="none" result="m"/><feDisplacementMap in="SourceGraphic" in2="m" scale="12" xChannelSelector="R" yChannelSelector="G"/></filter>';
+  el.append(sv);th.firstChild.style.filter='url(#'+fid+')';
+  const fit=()=>{const im=sv.querySelector('feImage'),c=getComputedStyle(th);im.setAttribute('width',parseFloat(c.width)||1);im.setAttribute('height',parseFloat(c.height)||1)};fit();new ResizeObserver(fit).observe(th)}
+ const paint=()=>{el.style.setProperty('--i',cur);cur===0||cur===n-1?el.setAttribute('data-edge',''):el.removeAttribute('data-edge');bs.forEach((b,i)=>{b.setAttribute('aria-checked',i===cur);b.tabIndex=i===cur?0:-1})};
+ const set=(i,quiet)=>{i=clamp(i,0,n-1);const ch=i!==cur,d=Math.abs(i-cur);cur=i;paint();if(ch&&!quiet){GlassKit.jelly(th,d,i===0?'left':i===n-1?'right':'center');on(i)}};
+ let lx=0,lt=0,sxT=0;const rb=v=>{const mx=(n-1)*sw,q=o=>6*(1-Math.exp(-o/30));return v<0?-q(-v):v>mx?mx+q(v-mx):v};
+ const at=x=>{const r=el.getBoundingClientRect();return clamp(Math.floor((x-r.left-4)/((r.width-8)/n)),0,n-1)};
+ const onGlass=e=>{const r=th.getBoundingClientRect(),m=4;return e.clientX>=r.left-m&&e.clientX<=r.right+m&&e.clientY>=r.top-m&&e.clientY<=r.bottom+m};
+ el.addEventListener('pointerdown',e=>{if(e.button)return;id=e.pointerId;el.setPointerCapture(id);th.getAnimations().forEach(a=>a.cancel());x0=lx=e.clientX;lt=performance.now();mv=false;grab=onGlass(e);
+  if(grab){sw=th.offsetWidth;p0=cur*sw;el.classList.add('press')}});
+ el.addEventListener('pointermove',e=>{
+  if(id===null){el.style.cursor=onGlass(e)?'grab':'pointer';return}
+  if(e.pointerId!==id||!grab)return;
+  const dx=e.clientX-x0;if(!mv&&Math.abs(dx)<4)return;mv=true;el.classList.add('drag');el.style.setProperty('--x',rb(p0+dx)+'px');const t=performance.now(),v=(e.clientX-lx)/Math.max(t-lt,1);lx=e.clientX;lt=t;el.style.setProperty('--sx',1+Math.min(Math.abs(v)*.08,.08));clearTimeout(sxT);sxT=setTimeout(()=>el.style.removeProperty('--sx'),70)});
+ const end=(e,ok)=>{if(e.pointerId!==id)return;id=null;let i=cur;const pv=cur;
+  if(ok){if(grab)i=mv?Math.round(parseFloat(el.style.getPropertyValue('--x'))/sw):at(e.clientX);
+         else if(Math.abs(e.clientX-x0)<8)i=at(e.clientX)}
+  grab=false;el.classList.remove('press','drag');el.style.removeProperty('--x');el.style.removeProperty('--sx');set(i);if(mv&&i===pv)GlassKit.jelly(th,.7,i===0?'left':i===n-1?'right':'center')};
+ el.addEventListener('pointerup',e=>end(e,true));el.addEventListener('pointercancel',e=>end(e,false));
+ el.addEventListener('click',e=>{if(e.detail===0){const b=e.target.closest('button');if(b)set(bs.indexOf(b))}});
+ el.addEventListener('keydown',e=>{const d={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key];if(d){e.preventDefault();set(cur+d);bs[cur].focus()}});
+ paint();return{set}
+}
+
+/* ---- Slider kaca: kapsul putih, saat ditekan jadi lensa yang membesar dan meregang; menempel (snap) di Clear / Default / Tinted ---- */
+function Slider(el,start,on){
+ const kb=el.querySelector('.kb');let v=start,id=null,grab=false,mv=false,lx=0,lt=0,sxT=0,tw=0;
+ const paint=()=>{el.style.setProperty('--p',v);el.setAttribute('aria-valuenow',Math.round(v));el.setAttribute('aria-valuetext',label(v))};
+ const snap=x=>{for(const p of[0,50,100])if(Math.abs(x-p)<=4)return p;return x};
+ const val=e=>{const r=el.getBoundingClientRect();return clamp((e.clientX-r.left)/r.width*100,0,100)};
+ const set=(x,quiet)=>{x=clamp(x,0,100);const ch=Math.round(x)!==Math.round(v);v=x;paint();if(ch&&!quiet)on(v)};
+ const onKnob=e=>{const r=kb.getBoundingClientRect(),m=6;return e.clientX>=r.left-m&&e.clientX<=r.right+m&&e.clientY>=r.top-m&&e.clientY<=r.bottom+m};
+ el.addEventListener('pointerdown',e=>{if(e.button||el.getAttribute('aria-disabled')==='true')return;id=e.pointerId;el.setPointerCapture(id);kb.getAnimations().forEach(a=>a.cancel());
+  grab=onKnob(e);mv=false;lx=e.clientX;lt=performance.now();tw=0;el.classList.add('press');if(grab)el.classList.add('drag');
+  if(!grab){set(snap(val(e)))}});
+ el.addEventListener('pointermove',e=>{if(e.pointerId!==id)return;
+  el.classList.add('drag');mv=true;set(snap(val(e)));
+  const t=performance.now(),s=(e.clientX-lx)/Math.max(t-lt,1);lx=e.clientX;lt=t;el.style.setProperty('--sx',1+Math.min(Math.abs(s)*.08,.1));clearTimeout(sxT);sxT=setTimeout(()=>el.style.removeProperty('--sx'),70)});
+ const end=(e,ok)=>{if(e.pointerId!==id)return;id=null;el.classList.remove('press','drag');el.style.removeProperty('--sx');
+  if(ok&&!mv&&!grab)set(snap(val(e)));
+  GlassKit.jelly(kb,.6,v<=0?'left':v>=100?'right':'center');on(v,1)};
+ el.addEventListener('pointerup',e=>end(e,true));el.addEventListener('pointercancel',e=>end(e,false));
+ el.addEventListener('keydown',e=>{const k={ArrowRight:5,ArrowUp:5,ArrowLeft:-5,ArrowDown:-5,PageUp:25,PageDown:-25}[e.key];
+  if(k){e.preventDefault();set(snap(Math.round(v/5)*5+k))}else if(e.key==='Home'){e.preventDefault();set(0)}else if(e.key==='End'){e.preventDefault();set(100)}});
+ paint();return{set}
+}
+
+const sw=(k,t)=>`<button type="button" class="gs-sw" role="switch" data-k="${k}" aria-checked="false" aria-label="${t}"><i></i></button>`;
 const sync=()=>{if(!sh)return;
- const tm=themeMode();sh.querySelectorAll('[data-k=theme] button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===tm));
+ themeSeg.set(['auto','light','dark'].indexOf(themeMode()),1);
+ setLq(st.g,1);lq.setAttribute('aria-disabled',!!st.s);
  sh.querySelector('[data-k=s]').setAttribute('aria-checked',!!st.s);sh.querySelector('[data-k=m]').setAttribute('aria-checked',!!st.m);
- rng.value=st.g;rng.disabled=!!st.s;rng.setAttribute('aria-valuetext',label(st.g));
- sh.querySelectorAll('.gs-tk span').forEach(s=>s.style.color=!st.s&&Math.abs(st.g-s.dataset.g)<=4?'var(--t)':'')};
+ ticks()};
+const ticks=()=>sh.querySelectorAll('.gs-tk span').forEach(s=>s.classList.toggle('on',!st.s&&Math.abs(st.g-s.dataset.g)<=4));
+const flip=(btn,key)=>{st[key]=st[key]?0:1;btn.setAttribute('aria-checked',!!st[key]);GlassKit.jelly(btn.querySelector('i'),.5,st[key]?'right':'left');apply();save();sync()};
 const build=()=>{if(sh)return;
  sh=D.createElement('div');sh.className='gs';sh.id='gs';sh.setAttribute('role','dialog');sh.setAttribute('aria-modal','true');sh.setAttribute('aria-labelledby','gs-t');sh.inert=true;
  sh.innerHTML='<div class="gs-ov"></div><div class="gs-pn"><div class="gs-hd"><h2 id="gs-t">Settings</h2><button type="button" class="x" aria-label="Close settings">'+X+'</button></div>'
- +'<h3>Appearance</h3><div class="gs-grp"><div class="gs-row col"><b>Theme</b>'+seg('theme',[['auto','Auto'],['light','Light'],['dark','Dark']])+'</div></div>'
+ +'<h3>Appearance</h3><div class="gs-grp"><div class="gs-row col"><b>Theme</b><div class="seg sm" id="gs-th" role="radiogroup" aria-label="Theme"><span class="thumb"></span><button type="button" role="radio">Auto</button><button type="button" role="radio">Light</button><button type="button" role="radio">Dark</button></div></div></div>'
  +'<h3>Glass</h3><div class="gs-grp"><div class="gs-row col"><div class="gs-pv" aria-hidden="true"><i>Liquid glass</i></div>'
- +'<input class="gs-rng" type="range" min="0" max="100" step="1" aria-label="Glass style"><div class="gs-tk" aria-hidden="true"><span data-g="0">Clear</span><span data-g="50">Default</span><span data-g="100">Tinted</span></div></div>'
+ +'<div class="gs-lq" id="gs-lq" role="slider" tabindex="0" aria-label="Glass style" aria-valuemin="0" aria-valuemax="100"><div class="trk"><span class="fill"></span><span class="tk" style="left:0"></span><span class="tk" style="left:50%"></span><span class="tk" style="left:100%"></span></div><span class="kb"></span></div>'
+ +'<div class="gs-tk" aria-hidden="true"><span data-g="0">Clear</span><span data-g="50">Default</span><span data-g="100">Tinted</span></div></div>'
  +'<div class="gs-row"><div><b>Solid</b><small>Turn glass off. Easier to read and lighter on older phones.</small></div>'+sw('s','Solid, no glass')+'</div></div>'
  +'<h3>Motion</h3><div class="gs-grp"><div class="gs-row"><div><b>Reduce animations</b><small>Fewer movements and transitions.</small></div>'+sw('m','Reduce animations')+'</div></div>'
  +'<div class="gs-foot"><button type="button" class="gs-btn" id="gs-rs">Reset appearance</button><button type="button" class="gs-btn warn" id="gs-cl">Clear saved data on this device</button></div>'
  +'<p class="gs-note">Clearing removes everything this site saved in this browser, including these settings.</p></div>';
- D.body.append(sh);rng=sh.querySelector('.gs-rng');
- const close=()=>shut();
- sh.querySelector('.gs-ov').onclick=close;sh.querySelector('.x').onclick=close;
- rng.addEventListener('input',()=>{let v=+rng.value;for(const p of[0,50,100])if(Math.abs(v-p)<=4){v=p;break}rng.value=v;st.g=v;apply();rng.setAttribute('aria-valuetext',label(v));save();sync()});
- sh.querySelectorAll('.gs-tk span').forEach(s=>s.onclick=()=>{if(st.s)return;st.g=+s.dataset.g;apply();save();sync()});
- sh.querySelectorAll('[data-k=theme] button').forEach(b=>b.onclick=()=>{setTheme(b.dataset.v);sync()});
- sh.querySelector('[data-k=s]').onclick=()=>{st.s=st.s?0:1;apply();save();sync()};
- sh.querySelector('[data-k=m]').onclick=()=>{st.m=st.m?0:1;apply();save();sync()};
+ D.body.append(sh);
+ sh.querySelector('.gs-ov').onclick=()=>shut();sh.querySelector('.x').onclick=()=>shut();
+ themeSeg=Seg(sh.querySelector('#gs-th'),Math.max(0,['auto','light','dark'].indexOf(themeMode())),i=>setTheme(['auto','light','dark'][i]));
+ lq=sh.querySelector('#gs-lq');
+ const lqc=Slider(lq,st.g,(v,done)=>{st.g=v;apply();ticks();if(done)save()});
+ setLq=(x,q)=>lqc.set(x,q);
+ sh.querySelectorAll('.gs-tk span').forEach(s=>s.onclick=()=>{if(st.s)return;st.g=+s.dataset.g;lqc.set(st.g,1);GlassKit.jelly(lq.querySelector('.kb'),.8,st.g===0?'left':st.g===100?'right':'center');apply();save();ticks()});
+ sh.querySelector('[data-k=s]').onclick=e=>flip(e.currentTarget,'s');
+ sh.querySelector('[data-k=m]').onclick=e=>flip(e.currentTarget,'m');
  sh.querySelector('#gs-rs').onclick=()=>{st=Object.assign({},DEF);apply();save();setTheme('auto');sync()};
  const cl=sh.querySelector('#gs-cl');
  cl.onclick=()=>{if(!cl.dataset.arm){cl.dataset.arm=1;cl.textContent='Tap again to confirm';armT=setTimeout(()=>{delete cl.dataset.arm;cl.textContent='Clear saved data on this device'},3500);return}
@@ -231,10 +292,10 @@ const shut=()=>{if(!open)return;open=false;sh.classList.remove('on');D.body.clas
  [$('main'),$('header')].forEach(e=>e&&(e.inert=false));
  setTimeout(()=>{if(!open)sh.inert=true},420);
  const t=opener&&opener.isConnected&&!opener.closest('[inert]')&&opener.offsetParent?opener:$('#mb');t&&t.focus({preventScroll:true})};
-const show=()=>{build();sync();if(open)return;open=true;opener=D.activeElement;
+const show=()=>{build();if(open)return;open=true;opener=D.activeElement;
  const dr=$('#dr');if(D.body.classList.contains('menu')&&dr)dr.querySelector('.x').click();
  [$('main'),$('header')].forEach(e=>e&&(e.inert=true));
- sh.inert=false;D.body.classList.add('gs-open');GlassKit.dim(true);
+ sh.inert=false;D.body.classList.add('gs-open');GlassKit.dim(true);sync();
  requestAnimationFrame(()=>requestAnimationFrame(()=>{sh.classList.add('on');sh.querySelector('.x').focus({preventScroll:true})}))};
 D.addEventListener('keydown',e=>{if(e.key==='Escape'&&open)shut()});
 const mount=()=>{const dr=$('#dr'),dc=dr&&dr.querySelector('.dc');if(!dc)return;
